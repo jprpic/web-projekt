@@ -1,10 +1,13 @@
 <?php
+if(isset($_POST['submit'])){
+    header("Location:index.php");
+}
 
 require_once('./dbconfig.php');
 
 try{
     $conn=DBConfig::getConnection();
-    echo "Connected!";
+    echo "Connected! </br>";
 }catch(Exception $error){
     echo $error->getMessage();
     exit;
@@ -44,5 +47,22 @@ EOSQL;
 
 $dbtable->createTable($tableName,$tableSQL);
 
-
+unset($conn);
 ?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Tables</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+<form action="" method="POST">
+    <input type="submit" name="submit" value="Go to Questions" class="btn btn-primary text-white">
+</form>
+
+</body>
+
+</html>
