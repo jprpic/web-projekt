@@ -32,7 +32,7 @@ class AccountValidator{
             return 'An email address is required!';
         }
         else{
-            $sanitizedEmail = filter_var($this->email, FILTER_SANITIZE_EMAIL);
+            $sanitizedEmail = filter_var($email, FILTER_SANITIZE_EMAIL);
             if (!($email == $sanitizedEmail && filter_var($email, FILTER_VALIDATE_EMAIL))) {
                 return "Email address is not valid!";
             }
@@ -64,6 +64,40 @@ class AccountValidator{
         }
     }
 
+
+    public function isTaken($attribute,$value){
+        $query = $this->conn->prepare("SELECT * FROM USERS WHERE $attribute = :$attribute");
+
+        try {
+            $query->execute([":$attribute" => $value]);
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        $user = $query->fetch();
+        if($user){
+            return "This $attribute is already taken!";
+        }
+        else{
+            return "";
+        }
+    }
+
+    public function createAccount($username,$email,$password){
+        $user = array(
+            ':email' => $email,
+            ':username' => $username,
+            ':password' => hash("sha256", $password)
+        );
+
+        $sql = <<<EOSQL
+            INSERT INTO Users (email, username, password) VALUES(:email, :username, :password);
+        EOSQL;
+
+        $stmt= $this->conn->prepare($sql);
+        $stmt->execute($user);
+    }
 }
 
 ?>

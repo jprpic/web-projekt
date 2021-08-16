@@ -5,7 +5,7 @@ $username = $email = $password = $confirmPassword = '';
 $errors = array('username'=>'','email'=>'','password'=>'','confirmPassword'=>'');
 
 if(isset($_POST['create'])){
-    require_once('./account-manager.php');
+    require_once('./account-validator.php');
     require_once('./dbconfig.php');
 
     $conn = DBConfig::getConnection();
@@ -16,57 +16,17 @@ if(isset($_POST['create'])){
 
     $errors['username'] = $accountValidator->checkUsername($username);
     $errors['email'] = $accountValidator->checkEmail($email);
-    $errors['password'] = $accountValidator->checkPassword($password);
-    $errors['confirmPassword'] = $accountValidator->confirmPassword($password,$confirmPassword);
+    $errors['password'] = $accountValidator->checkPassword($_POST['password']);
+    $errors['confirmPassword'] = $accountValidator->confirmPassword($_POST['password'],$_POST['confirmPassword']);
 
 
     if($errors['email'] == '' && $errors['username'] == ''){
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        // Check if email is taken
-
-        $sql = <<<EOSQL
-            SELECT * FROM USERS where email = :email;
-        EOSQL;
-
-        $query = $conn->prepare($sql);
-
-        try {
-            $query->execute(['email' => $email]);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-
-        $user = $query->fetch();
-        if($user){
-            $errors['email'] = "This e-mail address is already taken!";
-        }
-
-        // Check if username is taken
-
-        $sql = <<<EOSQL
-            SELECT * FROM USERS where name = :name;
-        EOSQL;
-
-        $query = $conn->prepare($sql);
-
-        try {
-            $query->execute(['name' => $username]);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-
-        $user = $query->fetch();
-        if($user){
-            $errors['username'] = "This username is already taken!";
-        }
+        $errors['email'] = $accountValidator->isTaken("email",$email);
+        $errors['username'] = $accountValidator->isTaken("username",$username);
     }
     if(!array_filter($errors)){
-        echo 'Account ready to be created!';
+        $accountValidator->createAccount($username,$email,$_POST['password']);
+        header('Location:login.php');
     }
 }
 
