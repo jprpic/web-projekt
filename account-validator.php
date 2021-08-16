@@ -98,6 +98,20 @@ class AccountValidator{
         $stmt= $this->conn->prepare($sql);
         $stmt->execute($user);
     }
+
+    public function checkAccount($attribute,$value,$password){
+        $query = $this->conn->prepare("SELECT * FROM USERS WHERE $attribute = :$attribute");
+        $query->execute([":$attribute" => $value]);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+
+        $user = $query->fetch();
+        if($user['password']==hash("sha256", $password)){
+            return $user;
+        }
+        else{
+            return '';
+        }
+    }
 }
 
 ?>

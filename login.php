@@ -1,15 +1,42 @@
 <?php
 
+$email = $password = "";
+$errors = array('name'=>'','password'=>'');
+
 if(isset($_POST['create'])){
     header("Location:./create-account.php");
 }
+if(isset($_POST['submit'])){
+    require_once('./account-validator.php');
+    require_once('./dbconfig.php');
+    $accountValidator = new AccountValidator(DBConfig::getConnection());
+
+    $username = $email = $_POST['email'];
+    $password = $_POST['password'];
+    $user = '';
+
+    if(!$accountValidator->checkEmail($email) && $accountValidator->isTaken("email",$email)){
+        $user = $accountValidator->checkAccount("email",$email,$password);
+        if(!$user){
+            $errors['password'] = "Incorrect password!";
+        }
+    }
+    else if(!$accountValidator->checkUsername($username) && $accountValidator->isTaken("username",$username)){
+        $user = $accountValidator->checkAccount("username",$username,$password);
+        if(!$user){
+            $errors['password'] = "Incorrect password!";
+        }
+    }
+    else{
+        $errors['name'] = "Sorry, user with these credentials can't be found.";
+    }
 
 
-
-$email = $password = "";
-$errors = array('email'=>'', 'password'=>'');
-
-
+    if($user){
+        setcookie("user", $user['id'], time() + (86400 * 30), "/");
+        header('Location:index.php');
+    }
+}
 ?>
 
 
@@ -27,12 +54,12 @@ $errors = array('email'=>'', 'password'=>'');
         <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
             <label for="email">E-mail/Username:</label></br>
             <input type="text" id="email" name="email" value="<?php echo htmlspecialchars($email)?>"></br>
-            <div class="text-danger"><?php echo $errors['email'];?></div>
+            <div class="text-danger"><?php echo $errors['name'];?></div>
 
             <label for="password">Password:</label></br>
             <input type="password" id="password" name="password"></br>
             <div class="text-danger"><?php echo $errors['password'];?></div>
-            
+
             <div class="center" style="margin:10px;">
                 <input type="submit" name="submit" value="Submit" class="btn btn-primary text-white">
             </div>
