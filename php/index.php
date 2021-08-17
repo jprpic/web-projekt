@@ -1,15 +1,20 @@
 <?php
+if(!isset($_COOKIE['user'])){
+    header('Location:./login.php');
+}
 
 if(isset($_POST['logout'])){
     setcookie("user",$_COOKIE['user'], time() - 3600 , "/");
     header('Location:./login.php');
 }
 
-if(!isset($_COOKIE['user'])){
-    header('Location:./login.php');
+if(isset($_POST['createquestion'])){
+    header('Location:./create-question.php');
 }
 
-
+if(isset($_POST['userquestions'])){
+    header('Location:./user-questions.php');
+}
 
 ?>
 
@@ -23,12 +28,12 @@ if(!isset($_COOKIE['user'])){
 </head>
 
 <body>
-
-<form action="" method="POST">
-    <input type="submit" name="logout" value="Log Out" class="btn btn-primary text-white">
-</form>
-
+    <section class="container bg-light text-right">
+        <form action="" method="POST">
+            <input type="submit" name="createquestion" value="Create a Question" class="btn btn-primary text-white">
+            <input type="submit" name="userquestions" value="Your Questions" class="btn btn-primary text-white">
+            <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
+        </form>
+    </section>
 </body>
-
-
 </html>
