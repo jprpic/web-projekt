@@ -1,6 +1,6 @@
 <?php
 
-class AccountValidator{
+class AccountManager{
     public $conn;
 
     public function __construct($conn){
@@ -21,6 +21,9 @@ class AccountValidator{
         }
         else if(strlen($username)>32){
             return "Username is too long!";
+        }
+        else if(!preg_match('/^[a-z\d_]{2,32}$/i', $username)) {
+            return "Username must contain characters, digits or underscore only!";
         }
         else{
             return "";
@@ -46,6 +49,9 @@ class AccountValidator{
     public function checkPassword($password){
         if(empty($password)){
             return 'A password is required!';
+        }
+        else if(strlen($password)<4){
+            return 'Password is too short!';
         }
         else if (strlen($password)>32){
             return 'Password is too long!';
@@ -99,7 +105,7 @@ class AccountValidator{
         $stmt->execute($user);
     }
 
-    public function checkAccount($attribute,$value,$password){
+    public function getAccount($attribute,$value,$password){
         $query = $this->conn->prepare("SELECT * FROM USERS WHERE $attribute = :$attribute");
         $query->execute([":$attribute" => $value]);
         $query->setFetchMode(PDO::FETCH_ASSOC);

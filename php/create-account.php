@@ -5,27 +5,27 @@ $username = $email = $password = $confirmPassword = '';
 $errors = array('username'=>'','email'=>'','password'=>'','confirmPassword'=>'');
 
 if(isset($_POST['create'])){
-    require_once('./account-validator.php');
+    require_once('./account-manager.php');
     require_once('./dbconfig.php');
 
     $conn = DBConfig::getConnection();
     $username = $_POST['username'];
     $email = $_POST['email'];
 
-    $accountValidator = new AccountValidator($conn);
+    $accountManager = new AccountManager($conn);
 
-    $errors['username'] = $accountValidator->checkUsername($username);
-    $errors['email'] = $accountValidator->checkEmail($email);
-    $errors['password'] = $accountValidator->checkPassword($_POST['password']);
-    $errors['confirmPassword'] = $accountValidator->confirmPassword($_POST['password'],$_POST['confirmPassword']);
+    $errors['username'] = $accountManager->checkUsername($username);
+    $errors['email'] = $accountManager->checkEmail($email);
+    $errors['password'] = $accountManager->checkPassword($_POST['password']);
+    $errors['confirmPassword'] = $accountManager->confirmPassword($_POST['password'],$_POST['confirmPassword']);
 
 
     if($errors['email'] == '' && $errors['username'] == ''){
-        $errors['email'] = $accountValidator->isTaken("email",$email);
-        $errors['username'] = $accountValidator->isTaken("username",$username);
+        $errors['email'] = $accountManager->isTaken("email",$email);
+        $errors['username'] = $accountManager->isTaken("username",$username);
     }
     if(!array_filter($errors)){
-        $accountValidator->createAccount($username,$email,$_POST['password']);
+        $accountManager->createAccount($username,$email,$_POST['password']);
         header('Location:login.php');
     }
 }

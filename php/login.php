@@ -7,22 +7,22 @@ if(isset($_POST['create'])){
     header("Location:./create-account.php");
 }
 if(isset($_POST['submit'])){
-    require_once('./account-validator.php');
+    require_once('./account-manager.php');
     require_once('./dbconfig.php');
-    $accountValidator = new AccountValidator(DBConfig::getConnection());
+    $accountManager = new AccountManager(DBConfig::getConnection());
 
     $username = $email = $_POST['email'];
     $password = $_POST['password'];
     $user = '';
 
-    if(!$accountValidator->checkEmail($email) && $accountValidator->isTaken("email",$email)){
-        $user = $accountValidator->checkAccount("email",$email,$password);
+    if(!$accountManager->checkEmail($email) && $accountManager->isTaken("email",$email)){
+        $user = $accountManager->getAccount("email",$email,$password);
         if(!$user){
             $errors['password'] = "Incorrect password!";
         }
     }
-    else if(!$accountValidator->checkUsername($username) && $accountValidator->isTaken("username",$username)){
-        $user = $accountValidator->checkAccount("username",$username,$password);
+    else if(!$accountManager->checkUsername($username) && $accountManager->isTaken("username",$username)){
+        $user = $accountManager->getAccount("username",$username,$password);
         if(!$user){
             $errors['password'] = "Incorrect password!";
         }
