@@ -51,7 +51,7 @@ class QuestionManager{
         $stmt->execute($questionData);
     }
 
-    public function getQuestions($userID){
+    public function getUserQuestions($userID){
         $sql = <<<EOSQL
             SELECT question, yes, no FROM Questions WHERE userID = :userID;
         EOSQL;
@@ -77,7 +77,7 @@ class QuestionManager{
             }
         }
         else{
-            $percentage = (float)((int)$yesAmount/((int)$yesAmount/(int)$noAmount));
+            $percentage = (float)($yesAmount/($yesAmount+$noAmount)) * 100;
             return $percentage;
         }
     }
@@ -89,7 +89,40 @@ class QuestionManager{
             return 0;
         }
         else{
-            return 100 - $positivePercentage;
+            return (float)(100 - $positivePercentage);
+        }
+    }
+
+
+    public function getAvailableQuestions($userID){
+        $sql = <<<EOSQL
+            SELECT * FROM Questions WHERE id NOT IN (SELECT questionID FROM Answers where userID = :userID) AND id NOT IN (SELECT id FROM Questions where userID = :userID);
+        EOSQL;
+
+        $query = $this->conn->prepare($sql);
+
+        try {
+            $query->execute([':userID'=>$userID,':userID'=>$userID]);
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            return $query;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function answerQuestion($questionID,$answer){
+        $sql = <<<EOSQL
+            UPDATE Questions
+            SET $answer = $answer + 1
+            WHERE id = :questionID
+        EOSQL;
+
+        $query = $this->conn->prepare($sql);
+
+        try {
+            $query->execute([':questionID'=>$questionID]);
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
 }

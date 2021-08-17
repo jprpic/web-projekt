@@ -47,6 +47,22 @@ EOSQL;
 
 $dbtable->createTable($tableName,$tableSQL);
 
+// Answers table creation
+
+$tableName = "Answers";
+$tableSQL= <<<EOSQL
+CREATE TABLE $tableName(
+    questionID INT ,
+    userID INT,
+    answer VARCHAR(3) NOT NULL,
+    PRIMARY KEY (questionID,userID),
+    FOREIGN KEY (questionID) REFERENCES Questions(id),
+    FOREIGN KEY (userID) REFERENCES Users(id)
+);
+EOSQL;
+
+$dbtable->createTable($tableName,$tableSQL);
+
 unset($conn);
 ?>
 

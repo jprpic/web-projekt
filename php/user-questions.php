@@ -7,7 +7,7 @@ require_once('./dbconfig.php');
 require_once('./question-manager.php');
 
 $questionManager = new QuestionManager(DBConfig::getConnection());
-$questions = $questionManager->getQuestions($_COOKIE['user']);
+$questions = $questionManager->getUserQuestions($_COOKIE['user']);
 
 ?>
 
@@ -35,17 +35,16 @@ $questions = $questionManager->getQuestions($_COOKIE['user']);
                         <td><?= htmlspecialchars($question['question']) ?></td>
                         <td>
                             <?php echo $question['yes'];
-                            echo ' (' .$questionManager->getPositivePercentage($question['yes'],$question['no']) . '%)';?>
+                            echo ' (' . round($questionManager->getPositivePercentage($question['yes'],$question['no'])) . '%)';?>
                         </td>
                         <td>
-                        <?php echo $question['yes'];
-                            echo ' (' . $questionManager->getNegativePercentage($question['yes'],$question['no']) . '%)';?>
+                        <?php echo $question['no'];
+                            echo ' (' . round($questionManager->getNegativePercentage($question['yes'],$question['no'])) . '%)';?>
                         </td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
         </table>
         
-
     </body>
 </html>
