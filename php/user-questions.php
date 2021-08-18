@@ -7,7 +7,7 @@ require_once('./dbconfig.php');
 require_once('./question-manager.php');
 
 $questionManager = new QuestionManager(DBConfig::getConnection());
-$questions = $questionManager->getUserQuestions($_COOKIE['user']);
+$questionData = $questionManager->getUserQuestionData($_COOKIE['user']);
 
 ?>
 
@@ -21,7 +21,8 @@ $questions = $questionManager->getUserQuestions($_COOKIE['user']);
     </head>
 
     <body>
-    <table class="table table-striped text-center">
+
+        <table class="table table-striped text-center">
             <thead>
                 <tr>
                     <th scope="col">Question</th>
@@ -30,7 +31,7 @@ $questions = $questionManager->getUserQuestions($_COOKIE['user']);
                 </tr>
             </thead>
             <tbody>
-                <?php while ($question = $questions->fetch()) : ?>
+                <?php foreach ($questionData as &$question): ?>
                     <tr>
                         <td><?= htmlspecialchars($question['question']) ?></td>
                         <td>
@@ -42,7 +43,7 @@ $questions = $questionManager->getUserQuestions($_COOKIE['user']);
                             echo ' (' . round($questionManager->getNegativePercentage($question['yes'],$question['no'])) . '%)';?>
                         </td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
         

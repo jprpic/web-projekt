@@ -38,33 +38,54 @@ class QuestionManager{
     public function saveQuestion($question,$userID){
         $questionData = array(
             ':question' => $question,
-            ':userID' => $userID,
-            ':yes' => 0,
-            ':no' => 0
+            ':userID' => $userID
         );
 
         $sql = <<<EOSQL
-            INSERT INTO Questions (question, yes, no, userID) VALUES(:question, :yes, :no, :userID);
+            INSERT INTO Questions (question, userID) VALUES(:question, :userID);
         EOSQL;
 
         $stmt= $this->conn->prepare($sql);
         $stmt->execute($questionData);
     }
 
-    public function getUserQuestions($userID){
+    public function getUserQuestionData($userID){
+        $questionData = array();
+
         $sql = <<<EOSQL
-            SELECT question, yes, no FROM Questions WHERE userID = :userID;
+            SELECT * FROM Questions WHERE userID = :userID;
         EOSQL;
 
-        $query = $this->conn->prepare($sql);
+        $questions = $this->conn->prepare($sql);
+        $questions->execute([':userID'=>$userID]);
+        while($question = $questions->fetch()){
+            $sql = <<<EOSQL
+                SELECT answer FROM Answers WHERE questionID = :questionID;
+            EOSQL;
 
-        try {
-            $query->execute([':userID'=>$userID]);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-            return $query;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+            $answers = $this->conn->prepare($sql);
+            $answers->execute([':questionID'=>$question['id']]);
+            $answers = $answers->fetchAll(PDO::FETCH_ASSOC);
+            $answers = array_column($answers, 'answer');
+            
+            $answerData = array(
+                'question' => $question['question'],
+                'yes' => 0,
+                'no' => 0
+            );
+
+            $answerValues = array_count_values($answers);
+            if(array_key_exists("yes",$answerValues)){
+                $answerData['yes'] = $answerValues['yes'];
+            }
+            if(array_key_exists("no",$answerValues)){
+                $answerData['no'] = $answerValues['no'];
+            }
+
+            //echo 'Question:' . $answerData['question'] . '</br>Yes: ' . $answerData['yes'] . '</br>No: ' . $answerData['no'] . '</br>';
+            array_push($questionData,$answerData);
         }
+        return $questionData;
     }
 
     public function getPositivePercentage($yesAmount,$noAmount){
@@ -86,7 +107,7 @@ class QuestionManager{
         $positivePercentage = $this->getPositivePercentage($yesAmount,$noAmount);
 
         if($positivePercentage==0){
-            return 0;
+            return (bool)$noAmount * 100;
         }
         else{
             return (float)(100 - $positivePercentage);
@@ -110,20 +131,21 @@ class QuestionManager{
         }
     }
 
-    public function answerQuestion($questionID,$answer){
+    public function answerQuestion($questionID,$userID,$answer){
+        // Insert the answer into Answers table
+
+        $answer = array(
+            ':questionID' => $questionID,
+            ':userID' => $userID,
+            ':answer' => $answer
+        );
+
         $sql = <<<EOSQL
-            UPDATE Questions
-            SET $answer = $answer + 1
-            WHERE id = :questionID
+            INSERT INTO Answers (questionID, userID, answer) VALUES(:questionID, :userID, :answer);
         EOSQL;
 
-        $query = $this->conn->prepare($sql);
-
-        try {
-            $query->execute([':questionID'=>$questionID]);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $stmt= $this->conn->prepare($sql);
+        $stmt->execute($answer);
     }
 }
 

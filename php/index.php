@@ -24,11 +24,13 @@ $availableQuestions = $questionManager->getAvailableQuestions($_COOKIE['user']);
 
 
 if(isset($_POST['yesanswer'])){
-    $questionManager->answerQuestion($_POST['yesanswer'],"yes");
+    $questionManager->answerQuestion($_POST['yesanswer'],$_COOKIE['user'],"yes");
+    header("Refresh:0");
 }
 
 if(isset($_POST['noanswer'])){
-    $questionManager->answerQuestion($_POST['noanswer'],"no");
+    $questionManager->answerQuestion($_POST['noanswer'],$_COOKIE['user'],"no");
+    header("Refresh:0");
 }
 
 
