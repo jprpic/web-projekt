@@ -7,7 +7,7 @@ if(isset($_POST['create'])){
     header("Location:./create-account.php");
 }
 if(isset($_POST['submit'])){
-    require_once('./account-manager.php');
+    require_once('./managers/account-manager.php');
     require_once('./dbconfig.php');
     $accountManager = new AccountManager(DBConfig::getConnection());
 

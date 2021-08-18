@@ -21,7 +21,7 @@ if(isset($_POST['useranswers'])){
 }
 
 require_once('./dbconfig.php');
-require_once('./question-manager.php');
+require_once('./managers/question-manager.php');
 
 $questionManager = new QuestionManager(DBConfig::getConnection());
 $availableQuestions = $questionManager->getAvailableQuestions($_SESSION['userID']);

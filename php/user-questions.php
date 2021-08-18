@@ -5,7 +5,7 @@ if(!isset($_SESSION['userID'])){
 }
 
 require_once('./dbconfig.php');
-require_once('./question-manager.php');
+require_once('./managers/question-manager.php');
 
 $questionManager = new QuestionManager(DBConfig::getConnection());
 $questionData = $questionManager->getUserQuestionData($_SESSION['userID']);

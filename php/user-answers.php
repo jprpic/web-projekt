@@ -4,12 +4,25 @@ if(!isset($_SESSION['userID'])){
     header('Location:./login.php');
 }
 
-require_once('./answer-manager.php');
+require_once('./managers/answer-manager.php');
+require_once('./managers/question-manager.php');
 require_once('./dbconfig.php');
 
-$answerManager = new AnswerManager(DBConfig::getConnection());
+$conn = DBConfig::getConnection();
 
-$QnAData = $answerManager->getUserAnswers($_SESSION['userID']);
+$answerManager = new AnswerManager($conn);
+$questionManager = new QuestionManager($conn);
+
+$sql = <<<EOSQL
+    SELECT questionID from Answers WHERE userID = :userID;
+EOSQL;
+
+$questionIDs = $conn->prepare($sql);
+$questionIDs->execute(['userID'=>$_SESSION['userID']]);
+$questionIDs = $questionIDs->fetchAll(PDO::FETCH_ASSOC);
+$questionIDs = array_column($questionIDs,'questionID');
+
+unset($conn);
 ?>
 
 <!DOCTYPE html>
@@ -30,11 +43,15 @@ $QnAData = $answerManager->getUserAnswers($_SESSION['userID']);
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($QnAData as &$QnA): ?>
+                <?php foreach($questionIDs as &$questionID): ?>
                     <tr>
-                        <td><?= htmlspecialchars($QnA['question']) ?></td>
                         <td>
-                            <?php echo $QnA['answer'];?>
+                            <form action="question.php" method="get">
+                            <button type="submit" name="questionID" value=<?= $questionID ?> class="btn btn-danger text-white"><?= htmlspecialchars($questionManager->getQuestion($questionID)) ?></button>
+                            </form>
+                        </td>
+                        <td>
+                            <?= $answerManager->getUserAnswer($questionID,$_SESSION['userID']);?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

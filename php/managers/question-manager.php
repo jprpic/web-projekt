@@ -51,39 +51,21 @@ class QuestionManager{
     }
 
     public function getUserQuestionData($userID){
+        require_once('./managers/answer-manager.php');
+        $answerManager = new AnswerManager($this->conn);
         $questionData = array();
 
         $sql = <<<EOSQL
-            SELECT * FROM Questions WHERE userID = :userID;
+            SELECT id,question FROM Questions WHERE userID = :userID;
         EOSQL;
 
         $questions = $this->conn->prepare($sql);
         $questions->execute([':userID'=>$userID]);
+
         while($question = $questions->fetch()){
-            $sql = <<<EOSQL
-                SELECT answer FROM Answers WHERE questionID = :questionID;
-            EOSQL;
-
-            $answers = $this->conn->prepare($sql);
-            $answers->execute([':questionID'=>$question['id']]);
-            $answers = $answers->fetchAll(PDO::FETCH_ASSOC);
-            $answers = array_column($answers, 'answer');
+            $answerData = $answerManager->countAnswers($question['id']);
+            $answerData['question'] = $question['question'];
             
-            $answerData = array(
-                'question' => $question['question'],
-                'yes' => 0,
-                'no' => 0
-            );
-
-            $answerValues = array_count_values($answers);
-            if(array_key_exists("yes",$answerValues)){
-                $answerData['yes'] = $answerValues['yes'];
-            }
-            if(array_key_exists("no",$answerValues)){
-                $answerData['no'] = $answerValues['no'];
-            }
-
-            //echo 'Question:' . $answerData['question'] . '</br>Yes: ' . $answerData['yes'] . '</br>No: ' . $answerData['no'] . '</br>';
             array_push($questionData,$answerData);
         }
         return $questionData;
@@ -140,6 +122,18 @@ class QuestionManager{
 
         $stmt= $this->conn->prepare($sql);
         $stmt->execute($answer);
+    }
+
+    public function getQuestion($questionID){
+        $sql = <<<EOSQL
+            SELECT question from Questions where id = :questionID
+        EOSQL;
+
+        $question = $this->conn->prepare($sql);
+        $question->execute([':questionID' => $questionID]);
+        $question = $question->fetch(PDO::FETCH_ASSOC);
+
+        return $question['question'];
     }
 }
 
