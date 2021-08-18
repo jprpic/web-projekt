@@ -15,6 +15,9 @@ if(isset($_POST['createquestion'])){
 if(isset($_POST['userquestions'])){
     header('Location:./user-questions.php');
 }
+if(isset($_POST['useranswers'])){
+    header('Location:./user-answers.php');
+}
 
 require_once('./dbconfig.php');
 require_once('./question-manager.php');
@@ -50,6 +53,7 @@ if(isset($_POST['noanswer'])){
         <form action="" method="POST">
             <input type="submit" name="createquestion" value="Create a Question" class="btn btn-primary text-white">
             <input type="submit" name="userquestions" value="Your Questions" class="btn btn-primary text-white">
+            <input type="submit" name="useranswers" value="Your Answers" class="btn btn-primary text-white">
             <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
         </form>
     </section>

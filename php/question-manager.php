@@ -12,7 +12,6 @@ class QuestionManager{
     }
 
     public function checkQuestion($question){
-
         if(empty($question)){
             return "Question can't be empty!";
         }
@@ -27,7 +26,7 @@ class QuestionManager{
         }
     }
 
-    public function formatQuestion($question){
+    private function formatQuestion($question){
         $question = ltrim($question);
         if(!preg_match('~^[\s\S]+[!?.]+$~u', $question)) {
             $question .= "?";
@@ -36,6 +35,8 @@ class QuestionManager{
     }
 
     public function saveQuestion($question,$userID){
+        $question = $this->formatQuestion($question);
+
         $questionData = array(
             ':question' => $question,
             ':userID' => $userID
@@ -121,20 +122,13 @@ class QuestionManager{
         EOSQL;
 
         $query = $this->conn->prepare($sql);
-
-        try {
-            $query->execute([':userID'=>$userID,':userID'=>$userID]);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-            return $query;
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $query->execute([':userID'=>$userID,':userID'=>$userID]);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        return $query;
     }
 
     public function answerQuestion($questionID,$userID,$answer){
-        // Insert the answer into Answers table
-
-        $answer = array(
+      $answer = array(
             ':questionID' => $questionID,
             ':userID' => $userID,
             ':answer' => $answer

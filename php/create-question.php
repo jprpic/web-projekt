@@ -9,7 +9,6 @@ if(isset($_POST['submit'])){
     require_once('./question-manager.php');
     require_once('./dbconfig.php');
     $questionManager = new QuestionManager(DBConfig::getConnection());
-    $question = $questionManager->formatQuestion($_POST['question']);
 
     $error = $questionManager->checkQuestion($question);
 
