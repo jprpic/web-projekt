@@ -33,7 +33,8 @@ if(isset($_POST['submit'])){
 
 
     if($user){
-        setcookie("user", $user['id'], time() + (86400 * 30), "/");
+        session_start();
+        $_SESSION["userID"]=$user['id'];
         header('Location:index.php');
     }
 }

@@ -1,10 +1,11 @@
 <?php
-if(!isset($_COOKIE['user'])){
+session_start();
+if(!isset($_SESSION['userID'])){
     header('Location:./login.php');
 }
 
 if(isset($_POST['logout'])){
-    setcookie("user",$_COOKIE['user'], time() - 3600 , "/");
+    unset($_SESSION["userID"]);
     header('Location:./login.php');
 }
 
@@ -23,16 +24,16 @@ require_once('./dbconfig.php');
 require_once('./question-manager.php');
 
 $questionManager = new QuestionManager(DBConfig::getConnection());
-$availableQuestions = $questionManager->getAvailableQuestions($_COOKIE['user']);
+$availableQuestions = $questionManager->getAvailableQuestions($_SESSION['userID']);
 
 
 if(isset($_POST['yesanswer'])){
-    $questionManager->answerQuestion($_POST['yesanswer'],$_COOKIE['user'],"yes");
+    $questionManager->answerQuestion($_POST['yesanswer'],$_SESSION['userID'],"yes");
     header("Refresh:0");
 }
 
 if(isset($_POST['noanswer'])){
-    $questionManager->answerQuestion($_POST['noanswer'],$_COOKIE['user'],"no");
+    $questionManager->answerQuestion($_POST['noanswer'],$_SESSION['userID'],"no");
     header("Refresh:0");
 }
 

@@ -1,5 +1,6 @@
 <?php
-if(!isset($_COOKIE['user'])){
+session_start();
+if(!isset($_SESSION['userID'])){
     header('Location:./login.php');
 }
 
@@ -9,11 +10,11 @@ if(isset($_POST['submit'])){
     require_once('./question-manager.php');
     require_once('./dbconfig.php');
     $questionManager = new QuestionManager(DBConfig::getConnection());
-
+    $question = $_POST['question'];
     $error = $questionManager->checkQuestion($question);
 
     if(!$error){
-        $questionManager->saveQuestion($question,$_COOKIE['user']);
+        $questionManager->saveQuestion($question,$_SESSION['userID']);
         header('location:index.php');
     }
 }

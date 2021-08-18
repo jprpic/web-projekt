@@ -1,5 +1,6 @@
 <?php
-if(!isset($_COOKIE['user'])){
+session_start();
+if(!isset($_SESSION['userID'])){
     header('Location:./login.php');
 }
 
@@ -8,7 +9,7 @@ require_once('./dbconfig.php');
 
 $answerManager = new AnswerManager(DBConfig::getConnection());
 
-$QnAData = $answerManager->getUserAnswers($_COOKIE['user']);
+$QnAData = $answerManager->getUserAnswers($_SESSION['userID']);
 ?>
 
 <!DOCTYPE html>
