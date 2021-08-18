@@ -12,15 +12,7 @@ $conn = DBConfig::getConnection();
 
 $answerManager = new AnswerManager($conn);
 $questionManager = new QuestionManager($conn);
-
-$sql = <<<EOSQL
-    SELECT questionID from Answers WHERE userID = :userID;
-EOSQL;
-
-$questionIDs = $conn->prepare($sql);
-$questionIDs->execute(['userID'=>$_SESSION['userID']]);
-$questionIDs = $questionIDs->fetchAll(PDO::FETCH_ASSOC);
-$questionIDs = array_column($questionIDs,'questionID');
+$questionIDs = $questionManager->getUserQuestionIDs($_SESSION['userID']);
 
 unset($conn);
 ?>

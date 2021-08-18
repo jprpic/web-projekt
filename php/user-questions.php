@@ -6,10 +6,16 @@ if(!isset($_SESSION['userID'])){
 
 require_once('./dbconfig.php');
 require_once('./managers/question-manager.php');
+require_once('./managers/answer-manager.php');
 
-$questionManager = new QuestionManager(DBConfig::getConnection());
-$questionData = $questionManager->getUserQuestionData($_SESSION['userID']);
+$conn = DBConfig::getConnection();
 
+$questionManager = new QuestionManager($conn);
+$answerManager = new AnswerManager($conn);
+$questionIDs = $questionManager->getUserQuestionIDs($_SESSION['userID']);
+
+
+unset($conn);
 ?>
 
 
@@ -32,16 +38,22 @@ $questionData = $questionManager->getUserQuestionData($_SESSION['userID']);
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($questionData as &$question): ?>
+                <?php foreach ($questionIDs as &$questionID):
+                    $question = $questionManager->getQuestion($questionID);
+                    $answerCount = $answerManager->countAnswers($questionID);?>
                     <tr>
-                        <td><?= htmlspecialchars($question['question']) ?></td>
                         <td>
-                            <?php echo $question['yes'];
-                            echo ' (' . round($questionManager->getPositivePercentage($question['yes'],$question['no'])) . '%)';?>
+                            <form action="question.php" method="get">  
+                                <button type="submit" name="questionID" value=<?= $questionID ?> class="btn btn-danger text-white"><?= htmlspecialchars($question) ?></button>
+                            </form>
                         </td>
                         <td>
-                        <?php echo $question['no'];
-                            echo ' (' . round($questionManager->getNegativePercentage($question['yes'],$question['no'])) . '%)';?>
+                            <?php echo $answerCount['yes'];
+                            echo ' (' . round($questionManager->getPositivePercentage($answerCount['yes'],$answerCount['no'])) . '%)';?>
+                        </td>
+                        <td>
+                        <?php echo $answerCount['no'];
+                            echo ' (' . round($questionManager->getNegativePercentage($answerCount['yes'],$answerCount['no'])) . '%)';?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

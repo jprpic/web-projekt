@@ -50,6 +50,19 @@ class QuestionManager{
         $stmt->execute($questionData);
     }
 
+    public function getUserQuestionIDs($userID){
+            $sql = <<<EOSQL
+            SELECT questionID from Answers WHERE userID = :userID;
+        EOSQL;
+
+        $questionIDs = $this->conn->prepare($sql);
+        $questionIDs->execute(['userID'=>$_SESSION['userID']]);
+        $questionIDs = $questionIDs->fetchAll(PDO::FETCH_ASSOC);
+        $questionIDs = array_column($questionIDs,'questionID');
+
+        return $questionIDs;
+    }
+
     public function getUserQuestionData($userID){
         require_once('./managers/answer-manager.php');
         $answerManager = new AnswerManager($this->conn);
@@ -73,12 +86,7 @@ class QuestionManager{
 
     public function getPositivePercentage($yesAmount,$noAmount){
         if($noAmount==0){
-            if($yesAmount==0){
-                return 0;
-            }
-            else{
-                return 100;
-            }
+            return (bool)$yesAmount * 100;
         }
         else{
             $percentage = (float)($yesAmount/($yesAmount+$noAmount)) * 100;
