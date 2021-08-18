@@ -14,7 +14,6 @@ $questionManager = new QuestionManager($conn);
 $answerManager = new AnswerManager($conn);
 $questionIDs = $questionManager->getUserQuestionIDs($_SESSION['userID']);
 
-
 unset($conn);
 ?>
 

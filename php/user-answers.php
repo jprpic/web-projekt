@@ -12,7 +12,7 @@ $conn = DBConfig::getConnection();
 
 $answerManager = new AnswerManager($conn);
 $questionManager = new QuestionManager($conn);
-$questionIDs = $questionManager->getUserQuestionIDs($_SESSION['userID']);
+$questionIDs = $answerManager->getAnsweredQuestionIDs($_SESSION['userID']);
 
 unset($conn);
 ?>

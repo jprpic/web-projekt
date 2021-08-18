@@ -52,13 +52,13 @@ class QuestionManager{
 
     public function getUserQuestionIDs($userID){
             $sql = <<<EOSQL
-            SELECT questionID from Answers WHERE userID = :userID;
+            SELECT id from Questions WHERE userID = :userID;
         EOSQL;
 
         $questionIDs = $this->conn->prepare($sql);
-        $questionIDs->execute(['userID'=>$_SESSION['userID']]);
+        $questionIDs->execute(['userID'=>$userID]);
         $questionIDs = $questionIDs->fetchAll(PDO::FETCH_ASSOC);
-        $questionIDs = array_column($questionIDs,'questionID');
+        $questionIDs = array_column($questionIDs,'id');
 
         return $questionIDs;
     }

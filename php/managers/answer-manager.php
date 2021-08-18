@@ -21,6 +21,19 @@ class AnswerManager{
         return $answer['answer'];
     }
 
+    public function getAnsweredQuestionIDs($userID){
+        $sql = <<<EOSQL
+            SELECT questionID from Answers WHERE userID = :userID
+        EOSQL;
+
+        $questionIDs = $this->conn->prepare($sql);
+        $questionIDs->execute([':userID' => $userID]);
+        $questionIDs = $questionIDs->fetchAll(PDO::FETCH_ASSOC);
+        $questionIDs = array_column($questionIDs,'questionID');
+
+        return $questionIDs;
+    }
+
     private function getQuestionAnswers($questionID){
         $sql = <<<EOSQL
                 SELECT answer FROM Answers WHERE questionID = :questionID;
