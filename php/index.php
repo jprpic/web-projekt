@@ -9,35 +9,28 @@ if(isset($_POST['logout'])){
     header('Location:./login.php');
 }
 
-if(isset($_POST['createquestion'])){
-    header('Location:./create-question.php');
-}
-
-if(isset($_POST['userquestions'])){
-    header('Location:./user-questions.php');
-}
-if(isset($_POST['useranswers'])){
-    header('Location:./user-answers.php');
-}
-
 require_once('./dbconfig.php');
-require_once('./managers/question-manager.php');
+require_once('./managers/answer-manager.php');
 
-$questionManager = new QuestionManager(DBConfig::getConnection());
-$availableQuestions = $questionManager->getAvailableQuestions($_SESSION['userID']);
-
+$conn = DBConfig::getConnection();
+$answerManager = new AnswerManager($conn);
+$userID = $_SESSION['userID'];
 
 if(isset($_POST['yesanswer'])){
-    $questionManager->answerQuestion($_POST['yesanswer'],$_SESSION['userID'],"yes");
+    $answerManager->answerQuestion($_POST['yesanswer'],$userID,"yes");
     header("Refresh:0");
 }
 
 if(isset($_POST['noanswer'])){
-    $questionManager->answerQuestion($_POST['noanswer'],$_SESSION['userID'],"no");
+    $answerManager->answerQuestion($_POST['noanswer'],$userID,"no");
     header("Refresh:0");
 }
 
+require_once('./managers/question-manager.php');
+$questionManager = new QuestionManager($conn);
+$availableQuestions = $questionManager->getAvailableQuestions($userID);
 
+unset($conn);
 ?>
 
 
@@ -50,13 +43,17 @@ if(isset($_POST['noanswer'])){
 </head>
 
 <body>
-    <section class="container bg-light text-right">
-        <form action="" method="POST">
-            <input type="submit" name="createquestion" value="Create a Question" class="btn btn-primary text-white">
-            <input type="submit" name="userquestions" value="Your Questions" class="btn btn-primary text-white">
-            <input type="submit" name="useranswers" value="Your Answers" class="btn btn-primary text-white">
-            <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
-        </form>
+    <section class="d-flex justify-content-between bg-light text-right">
+        <a href="./index.php"><button class="btn btn-primary text-white" style="margin:4px;">Home</button></a>
+        <div class="d-flex justify-content-end" style="margin:4px;">
+            <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
+            <form action="./user-questions.php" method="get" style="margin:0px 4px;">
+                <button type="submit" name="userID" value=<?= $_SESSION['userID'];?> class="btn btn-primary text-white">Your profile</button>
+            </form>
+            <form action="" method="POST">
+                <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
+            </form>
+        </div>
     </section>
 
     <section>
@@ -71,7 +68,11 @@ if(isset($_POST['noanswer'])){
         <tbody>
             <?php while ($question = $availableQuestions->fetch()) : ?>
                 <tr>
-                    <td><?= htmlspecialchars($question['question']) ?></td>
+                    <td>
+                        <form action="question.php" method="get">
+                            <button type="submit" name="questionID" value=<?= $question['id'] ?> class="btn btn-danger text-white"><?= htmlspecialchars($questionManager->getQuestion($question['id'])) ?></button>
+                        </form>
+                    </td>
                     <td>
                         <form action="" method="POST">
                             <button type="submit" name="yesanswer" value=<?=$question['id']?> class="btn btn-primary text-white">Yes</button>

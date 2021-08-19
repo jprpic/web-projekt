@@ -117,21 +117,6 @@ class QuestionManager{
         return $query;
     }
 
-    public function answerQuestion($questionID,$userID,$answer){
-      $answer = array(
-            ':questionID' => $questionID,
-            ':userID' => $userID,
-            ':answer' => $answer
-        );
-
-        $sql = <<<EOSQL
-            INSERT INTO Answers (questionID, userID, answer) VALUES(:questionID, :userID, :answer);
-        EOSQL;
-
-        $stmt= $this->conn->prepare($sql);
-        $stmt->execute($answer);
-    }
-
     public function getQuestion($questionID){
         $sql = <<<EOSQL
             SELECT question from Questions where id = :questionID
@@ -154,6 +139,29 @@ class QuestionManager{
         $question = $question->fetch(PDO::FETCH_ASSOC);
 
         return $question['userID'];
+    }
+
+    public function countQuestions($userID){
+        $questionCount = $this->conn->prepare("SELECT COUNT(question) FROM Questions where userID = :userID");
+        $questionCount->execute([':userID'=>$userID]);
+        $questionCount = $questionCount->fetch(PDO::FETCH_ASSOC);
+        return $questionCount['COUNT(question)'];
+    }
+    
+    public function removeQuestion($questionID){
+        $sql = <<<EOSQL
+            DELETE FROM Answers WHERE questionID = :questionID;
+        EOSQL;
+
+        $removeAnswers = $this->conn->prepare($sql);
+        $removeAnswers->execute([':questionID'=>$questionID]);
+
+        $sql = <<<EOSQL
+            DELETE FROM Questions WHERE id = :questionID;
+        EOSQL;
+
+        $removeQuestion = $this->conn->prepare($sql);
+        $removeQuestion->execute([':questionID'=>$questionID]);
     }
 }
 
