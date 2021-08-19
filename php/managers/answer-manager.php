@@ -17,8 +17,11 @@ class AnswerManager{
         $answer = $this->conn->prepare($sql);
         $answer->execute([':questionID' => $questionID, ':userID' => $userID]);
         $answer = $answer->fetch(PDO::FETCH_ASSOC);
-
-        return $answer['answer'];
+        if($answer){
+            return $answer['answer'];
+        }
+        return null;
+        
     }
 
     public function getAnsweredQuestionIDs($userID){
@@ -69,6 +72,40 @@ class AnswerManager{
 
         return $answerCount['COUNT(answer)'];
     }
+
+    public function answerQuestion($questionID,$userID,$answer){
+        $answer = array(
+            ':questionID' => $questionID,
+            ':userID' => $userID,
+            ':answer' => $answer
+        );
+
+        $sql = <<<EOSQL
+            INSERT INTO Answers (questionID, userID, answer) VALUES(:questionID, :userID, :answer);
+        EOSQL;
+
+        $stmt= $this->conn->prepare($sql);
+        $stmt->execute($answer);
+    }
+
+    public function changeAnswer($questionID,$userID,$answer){
+        $answer = array(
+            ':questionID' => $questionID,
+            ':userID' => $userID,
+            ':answer' => $answer
+        );
+
+        $sql = <<<EOSQL
+            UPDATE Answers
+            SET answer = :answer
+            WHERE questionID = :questionID AND userID = :userID;
+        EOSQL;
+
+        $stmt= $this->conn->prepare($sql);
+        $stmt->execute($answer);
+    }
+
+      
 }
 
 ?>

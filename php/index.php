@@ -9,35 +9,28 @@ if(isset($_POST['logout'])){
     header('Location:./login.php');
 }
 
-if(isset($_POST['createquestion'])){
-    header('Location:./create-question.php');
-}
-
-if(isset($_POST['userquestions'])){
-    header('Location:./user-questions.php');
-}
-if(isset($_POST['useranswers'])){
-    header('Location:./user-answers.php');
-}
-
 require_once('./dbconfig.php');
-require_once('./managers/question-manager.php');
+require_once('./managers/answer-manager.php');
 
-$questionManager = new QuestionManager(DBConfig::getConnection());
-$availableQuestions = $questionManager->getAvailableQuestions($_SESSION['userID']);
-
+$conn = DBConfig::getConnection();
+$answerManager = new AnswerManager($conn);
+$userID = $_SESSION['userID'];
 
 if(isset($_POST['yesanswer'])){
-    $questionManager->answerQuestion($_POST['yesanswer'],$_SESSION['userID'],"yes");
+    $answerManager->answerQuestion($_POST['yesanswer'],$userID,"yes");
     header("Refresh:0");
 }
 
 if(isset($_POST['noanswer'])){
-    $questionManager->answerQuestion($_POST['noanswer'],$_SESSION['userID'],"no");
+    $answerManager->answerQuestion($_POST['noanswer'],$userID,"no");
     header("Refresh:0");
 }
 
+require_once('./managers/question-manager.php');
+$questionManager = new QuestionManager($conn);
+$availableQuestions = $questionManager->getAvailableQuestions($userID);
 
+unset($conn);
 ?>
 
 

@@ -9,7 +9,6 @@ if(isset($_POST['logout'])){
     header('Location:./login.php');
 }
 
-
 require_once('./dbconfig.php');
 require_once('./managers/question-manager.php');
 require_once('./managers/answer-manager.php');

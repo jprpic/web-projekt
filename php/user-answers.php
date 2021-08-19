@@ -9,17 +9,6 @@ if(isset($_POST['logout'])){
     header('Location:./login.php');
 }
 
-if(isset($_POST['createquestion'])){
-    header('Location:./create-question.php');
-}
-
-if(isset($_POST['userquestions'])){
-    header('Location:./user-questions.php');
-}
-if(isset($_POST['useranswers'])){
-    header('Location:./user-answers.php');
-}
-
 require_once('./managers/answer-manager.php');
 require_once('./managers/question-manager.php');
 require_once('./managers/account-manager.php');

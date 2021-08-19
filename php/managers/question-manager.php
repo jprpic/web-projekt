@@ -117,21 +117,6 @@ class QuestionManager{
         return $query;
     }
 
-    public function answerQuestion($questionID,$userID,$answer){
-      $answer = array(
-            ':questionID' => $questionID,
-            ':userID' => $userID,
-            ':answer' => $answer
-        );
-
-        $sql = <<<EOSQL
-            INSERT INTO Answers (questionID, userID, answer) VALUES(:questionID, :userID, :answer);
-        EOSQL;
-
-        $stmt= $this->conn->prepare($sql);
-        $stmt->execute($answer);
-    }
-
     public function getQuestion($questionID){
         $sql = <<<EOSQL
             SELECT question from Questions where id = :questionID
