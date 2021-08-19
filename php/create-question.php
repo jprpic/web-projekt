@@ -48,12 +48,15 @@ if(isset($_POST['submit'])){
     <body>
         <section class="d-flex justify-content-between bg-light text-right">
             <a href="./index.php"><button class="btn btn-primary text-white" style="margin:4px;">Home</button></a>
-            <form action="" method="POST" style="margin:4px;">
-                <input type="submit" name="createquestion" value="Create a Question" class="btn btn-primary text-white">
-                <input type="submit" name="userquestions" value="Your Questions" class="btn btn-primary text-white">
-                <input type="submit" name="useranswers" value="Your Answers" class="btn btn-primary text-white">
-                <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
-            </form>
+            <div class="d-flex justify-content-end" style="margin:4px;">
+                <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
+                <form action="./user-questions.php" method="get" style="margin:0px 4px;">
+                    <button type="submit" name="userID" value=<?= $_SESSION['userID'];?> class="btn btn-primary text-white">Your profile</button>
+                </form>
+                <form action="" method="POST">
+                    <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
+                </form>
+            </div>
         </section>
 
         <section class="container text-center bg-light">

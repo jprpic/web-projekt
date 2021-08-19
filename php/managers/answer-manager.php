@@ -61,6 +61,14 @@ class AnswerManager{
 
         return $answerCount;
     }
+
+    public function countUserAnswers($userID){
+        $answerCount = $this->conn->prepare("SELECT COUNT(answer) FROM Answers WHERE userID = :userID");
+        $answerCount->execute([':userID'=>$userID]);
+        $answerCount = $answerCount->fetch(PDO::FETCH_ASSOC);
+
+        return $answerCount['COUNT(answer)'];
+    }
 }
 
 ?>

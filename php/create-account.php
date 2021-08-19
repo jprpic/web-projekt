@@ -5,7 +5,7 @@ $username = $email = $password = $confirmPassword = '';
 $errors = array('username'=>'','email'=>'','password'=>'','confirmPassword'=>'');
 
 if(isset($_POST['create'])){
-    require_once('./account-manager.php');
+    require_once('./managers/account-manager.php');
     require_once('./dbconfig.php');
 
     $conn = DBConfig::getConnection();

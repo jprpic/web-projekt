@@ -155,6 +155,13 @@ class QuestionManager{
 
         return $question['userID'];
     }
+
+    public function countQuestions($userID){
+        $questionCount = $this->conn->prepare("SELECT COUNT(question) FROM Questions where userID = :userID");
+        $questionCount->execute([':userID'=>$userID]);
+        $questionCount = $questionCount->fetch(PDO::FETCH_ASSOC);
+        return $questionCount['COUNT(question)'];
+    }
 }
 
 ?>
