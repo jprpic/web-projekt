@@ -9,17 +9,26 @@ if(isset($_POST['logout'])){
     header('Location:./login.php');
 }
 
-require_once('./managers/answer-manager.php');
-require_once('./managers/question-manager.php');
-require_once('./managers/account-manager.php');
 require_once('./dbconfig.php');
 
-$conn = DBConfig::getConnection();
+require_once('./managers/answer-manager.php');
 
+$conn = DBConfig::getConnection();
 $answerManager = new AnswerManager($conn);
+$ownerID = $_SESSION['userID'];
+
+
+if(isset($_POST['remove'])){
+    $answerManager->removeAnswer($_POST['remove'],$ownerID);
+}
+
+require_once('./managers/question-manager.php');
+require_once('./managers/account-manager.php');
+
 $questionManager = new QuestionManager($conn);
 $accountManager = new AccountManager($conn);
 $userID = $_GET['userID'];
+$isOwner = $userID == $ownerID;
 $questionIDs = $answerManager->getAnsweredQuestionIDs($userID);
 $userName = $accountManager->getUsername($userID);
 
@@ -78,6 +87,9 @@ unset($conn);
                     <tr>
                         <th scope="col">Question</th>
                         <th scope="col">Answer</th>
+                        <?php if($isOwner):?>
+                                <th scope="col"></th>
+                        <?php endif;?>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,6 +103,13 @@ unset($conn);
                             <td>
                                 <?= htmlspecialchars($answerManager->getUserAnswer($questionID,$userID));?>
                             </td>
+                            <?php if($isOwner):?>
+                                    <td>
+                                        <form action="" method="post">
+                                            <button type="submit" name="remove" value=<?= $questionID; ?> class="btn btn-outline-danger btn-sm" style="font-size:12px;">x</button>
+                                        </form>
+                                    </td>
+                            <?php endif;?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

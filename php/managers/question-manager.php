@@ -147,6 +147,22 @@ class QuestionManager{
         $questionCount = $questionCount->fetch(PDO::FETCH_ASSOC);
         return $questionCount['COUNT(question)'];
     }
+    
+    public function removeQuestion($questionID){
+        $sql = <<<EOSQL
+            DELETE FROM Answers WHERE questionID = :questionID;
+        EOSQL;
+
+        $removeAnswers = $this->conn->prepare($sql);
+        $removeAnswers->execute([':questionID'=>$questionID]);
+
+        $sql = <<<EOSQL
+            DELETE FROM Questions WHERE id = :questionID;
+        EOSQL;
+
+        $removeQuestion = $this->conn->prepare($sql);
+        $removeQuestion->execute([':questionID'=>$questionID]);
+    }
 }
 
 ?>

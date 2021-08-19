@@ -11,16 +11,24 @@ if(isset($_POST['logout'])){
 
 require_once('./dbconfig.php');
 require_once('./managers/question-manager.php');
+
+$conn = DBConfig::getConnection();
+$questionManager = new QuestionManager($conn);
+
+if(isset($_POST['remove'])){
+    $questionManager->removeQuestion($_POST['remove']);
+}
+
+
 require_once('./managers/answer-manager.php');
 require_once('./managers/account-manager.php');
 
-$conn = DBConfig::getConnection();
 
-$questionManager = new QuestionManager($conn);
 $answerManager = new AnswerManager($conn);
 $accountManager = new AccountManager($conn);
 $userID = $_GET['userID'];
 $questionIDs = $questionManager->getUserQuestionIDs($userID);
+$isOwner = $userID == $_SESSION['userID'];
 $userName = $accountManager->getUsername($userID);
 
 $questionCount = $questionManager->countQuestions($userID);
@@ -80,6 +88,9 @@ unset($conn);
                             <th scope="col">Question</th>
                             <th scope="col">Yes</th>
                             <th scope="col">No</th>
+                            <?php if($isOwner):?>
+                                <th scope="col"></th>
+                            <?php endif;?>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,7 +100,7 @@ unset($conn);
                             <tr>
                                 <td>
                                     <form action="question.php" method="get">  
-                                        <button type="submit" name="questionID" value=<?= $questionID ?> class="btn btn-danger text-white"><?= htmlspecialchars($question) ?></button>
+                                        <button type="submit" name="questionID" value=<?= $questionID; ?> class="btn btn-danger text-white"><?= htmlspecialchars($question) ?></button>
                                     </form>
                                 </td>
                                 <td>
@@ -100,6 +111,13 @@ unset($conn);
                                 <?php echo $answerCount['no'];
                                     echo ' (' . round($questionManager->getNegativePercentage($answerCount['yes'],$answerCount['no'])) . '%)';?>
                                 </td>
+                                <?php if($isOwner):?>
+                                    <td>
+                                        <form action="" method="post">
+                                            <button type="submit" name="remove" value=<?= $questionID; ?> class="btn btn-outline-danger btn-sm" style="font-size:12px;">x</button>
+                                        </form>
+                                    </td>
+                                <?php endif;?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

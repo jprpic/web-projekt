@@ -89,7 +89,8 @@ unset($conn);
     <div class="d-flex justify-content-center">
         <?php if(!$isQuestionOwner):?>
             <form  action="" method="post">
-                <button type="submit" name="noanswer" value=<?= $questionID?> class="btn btn-danger text-white">No</button>
+                <button type="submit" name="noanswer" value=<?= $questionID?> class="btn btn-danger text-white"
+                <?php if($userAnswer=="no"){echo "disabled";}?>>No</button>
             </form>
         <?php endif;?>
         <div class="text-left bg-danger text-white" style="padding: 64px;font-size: 32px;margin:32px;">
@@ -100,7 +101,8 @@ unset($conn);
         </div>
         <?php if(!$isQuestionOwner):?>
             <form action="" method="post">
-                <button type="submit" name="yesanswer" value=<?= $questionID?> class="btn btn-success text-white">Yes</button>
+                <button type="submit" name="yesanswer" value=<?= $questionID?> class="btn btn-success text-white"
+                <?php if($userAnswer=="yes"){echo "disabled";}?>>Yes</button>
             </form>
         <?php endif;?>
     </div>

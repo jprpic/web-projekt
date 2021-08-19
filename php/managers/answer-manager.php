@@ -105,7 +105,14 @@ class AnswerManager{
         $stmt->execute($answer);
     }
 
-      
+    public function removeAnswer($questionID,$userID){
+        $sql = <<<EOSQL
+            DELETE FROM Answers WHERE questionID = :questionID AND userID = :userID;
+        EOSQL;
+
+        $removeAnswer = $this->conn->prepare($sql);
+        $removeAnswer->execute([':questionID'=>$questionID, ':userID'=>$userID]);
+    }
 }
 
 ?>
