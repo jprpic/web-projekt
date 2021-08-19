@@ -38,9 +38,23 @@ $tableSQL= <<<EOSQL
 CREATE TABLE $tableName(
     id INT AUTO_INCREMENT PRIMARY KEY,
     question VARCHAR(255) NOT NULL,
-    yes INT NOT NULL,
-    no INT NOT NULL,
     userID INT NOT NULL,
+    FOREIGN KEY (userID) REFERENCES Users(id)
+);
+EOSQL;
+
+$dbtable->createTable($tableName,$tableSQL);
+
+// Answers table creation
+
+$tableName = "Answers";
+$tableSQL= <<<EOSQL
+CREATE TABLE $tableName(
+    questionID INT ,
+    userID INT,
+    answer VARCHAR(3) NOT NULL,
+    PRIMARY KEY (questionID,userID),
+    FOREIGN KEY (questionID) REFERENCES Questions(id),
     FOREIGN KEY (userID) REFERENCES Users(id)
 );
 EOSQL;

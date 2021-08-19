@@ -7,7 +7,7 @@ if(isset($_POST['create'])){
     header("Location:./create-account.php");
 }
 if(isset($_POST['submit'])){
-    require_once('./account-manager.php');
+    require_once('./managers/account-manager.php');
     require_once('./dbconfig.php');
     $accountManager = new AccountManager(DBConfig::getConnection());
 
@@ -33,7 +33,8 @@ if(isset($_POST['submit'])){
 
 
     if($user){
-        setcookie("user", $user['id'], time() + (86400 * 30), "/");
+        session_start();
+        $_SESSION["userID"]=$user['id'];
         header('Location:index.php');
     }
 }

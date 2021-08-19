@@ -16,7 +16,7 @@ class AccountManager{
         if(empty($username)){
             return "A username is required!";
         }
-        else if(strlen($username)<4){
+        else if(strlen($username)<3){
             return "Username must be at least 4 characters long!";
         }
         else if(strlen($username)>32){
@@ -50,7 +50,7 @@ class AccountManager{
         if(empty($password)){
             return 'A password is required!';
         }
-        else if(strlen($password)<4){
+        else if(strlen($password)<3){
             return 'Password is too short!';
         }
         else if (strlen($password)>32){
@@ -117,6 +117,13 @@ class AccountManager{
         else{
             return '';
         }
+    }
+
+    public function getUsername($userID){
+        $username = $this->conn->prepare("SELECT username FROM Users WHERE id = :userID");
+        $username->execute([':userID'=>$userID]);
+        $username = $username->fetch(PDO::FETCH_ASSOC);
+        return $username['username'];
     }
 }
 
