@@ -143,6 +143,18 @@ class QuestionManager{
 
         return $question['question'];
     }
+
+    public function getOwner($questionID){
+        $sql = <<<EOSQL
+            SELECT userID from Questions where id = :questionID
+        EOSQL;
+
+        $question = $this->conn->prepare($sql);
+        $question->execute([':questionID' => $questionID]);
+        $question = $question->fetch(PDO::FETCH_ASSOC);
+
+        return $question['userID'];
+    }
 }
 
 ?>

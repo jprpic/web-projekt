@@ -4,6 +4,22 @@ if(!isset($_SESSION['userID'])){
     header('Location:./login.php');
 }
 
+if(isset($_POST['logout'])){
+    unset($_SESSION["userID"]);
+    header('Location:./login.php');
+}
+
+if(isset($_POST['createquestion'])){
+    header('Location:./create-question.php');
+}
+
+if(isset($_POST['userquestions'])){
+    header('Location:./user-questions.php');
+}
+if(isset($_POST['useranswers'])){
+    header('Location:./user-answers.php');
+}
+
 require_once('./managers/answer-manager.php');
 require_once('./managers/question-manager.php');
 require_once('./dbconfig.php');
@@ -26,6 +42,15 @@ unset($conn);
     </head>
 
     <body>
+        <section class="d-flex justify-content-between bg-light text-right">
+            <a href="./index.php"><button class="btn btn-primary text-white" style="margin:4px;">Home</button></a>
+            <form action="" method="POST" style="margin:4px;">
+                <input type="submit" name="createquestion" value="Create a Question" class="btn btn-primary text-white">
+                <input type="submit" name="userquestions" value="Your Questions" class="btn btn-primary text-white">
+                <input type="submit" name="useranswers" value="Your Answers" class="btn btn-primary text-white">
+                <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
+            </form>
+        </section>
 
         <table class="table table-striped text-center">
             <thead>

@@ -118,6 +118,13 @@ class AccountManager{
             return '';
         }
     }
+
+    public function getUsername($userID){
+        $username = $this->conn->prepare("SELECT username FROM Users WHERE id = :userID");
+        $username->execute([':userID'=>$userID]);
+        $username = $username->fetch(PDO::FETCH_ASSOC);
+        return $username['username'];
+    }
 }
 
 ?>
