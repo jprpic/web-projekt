@@ -39,7 +39,7 @@ CREATE TABLE $tableName(
     id INT AUTO_INCREMENT PRIMARY KEY,
     question VARCHAR(255) NOT NULL,
     userID INT NOT NULL,
-    FOREIGN KEY (userID) REFERENCES Users(id)
+    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
 );
 EOSQL;
 
@@ -47,6 +47,7 @@ $dbtable->createTable($tableName,$tableSQL);
 
 // Answers table creation
 
+// TODO - answer CHECK IN ("no","yes")
 $tableName = "Answers";
 $tableSQL= <<<EOSQL
 CREATE TABLE $tableName(
@@ -54,12 +55,58 @@ CREATE TABLE $tableName(
     userID INT,
     answer VARCHAR(3) NOT NULL,
     PRIMARY KEY (questionID,userID),
-    FOREIGN KEY (questionID) REFERENCES Questions(id),
-    FOREIGN KEY (userID) REFERENCES Users(id)
+    FOREIGN KEY (questionID) REFERENCES Questions(id) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
 );
 EOSQL;
 
 $dbtable->createTable($tableName,$tableSQL);
+
+// Comment table creation
+
+$tableName = "Comments";
+$tableSQL = <<<EOSQL
+CREATE TABLE $tableName(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    comment VARCHAR(255) NOT NULL,
+    userID INT NOT NULL,
+    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
+);
+EOSQL;
+
+$dbtable->createTable($tableName,$tableSQL);
+
+// Question_comments table creation
+
+$tableName = "Question_comments";
+$tableSQL = <<<EOSQL
+CREATE TABLE $tableName(
+    questionID INT,
+    commentID INT,
+    PRIMARY KEY (questionID,commentID),
+    FOREIGN KEY (questionID) REFERENCES Questions(id) ON DELETE CASCADE,
+    FOREIGN KEY (commentID) REFERENCES Comments(id) ON DELETE CASCADE
+);
+EOSQL;
+
+$dbtable->createTable($tableName,$tableSQL);
+
+// Parent-Child-Comment table creation
+
+$tableName = "Parent_child_comments";
+$tableSQL = <<<EOSQL
+CREATE TABLE $tableName(
+    parent_comment_id INT,
+    child_comment_id INT,
+    PRIMARY KEY (parent_comment_id,child_comment_id),
+    FOREIGN KEY (parent_comment_id) REFERENCES Comments(id) ON DELETE CASCADE,
+    FOREIGN KEY (child_comment_id) REFERENCES Comments(id) ON DELETE CASCADE
+);
+EOSQL;
+
+$dbtable->createTable($tableName,$tableSQL);
+
+// All tables created -- unset connection
 
 unset($conn);
 ?>
