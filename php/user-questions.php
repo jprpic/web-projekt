@@ -19,7 +19,6 @@ if(isset($_POST['remove'])){
     $questionManager->removeQuestion($_POST['remove']);
 }
 
-
 require_once('./managers/answer-manager.php');
 require_once('./managers/account-manager.php');
 require_once('./managers/comment-manager.php');

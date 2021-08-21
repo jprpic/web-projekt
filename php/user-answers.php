@@ -24,9 +24,11 @@ if(isset($_POST['remove'])){
 
 require_once('./managers/question-manager.php');
 require_once('./managers/account-manager.php');
+require_once('./managers/comment-manager.php');
 
 $questionManager = new QuestionManager($conn);
 $accountManager = new AccountManager($conn);
+$commentManager = new CommentManager($conn);
 $userID = $_GET['userID'];
 $isOwner = $userID == $ownerID;
 $questionIDs = $answerManager->getAnsweredQuestionIDs($userID);
@@ -34,6 +36,7 @@ $userName = $accountManager->getUsername($userID);
 
 $questionCount = $questionManager->countQuestions($userID);
 $answerCount = $answerManager->countUserAnswers($userID);
+$commentCount = $commentManager->countComments($userID);
 
 unset($conn);
 ?>
@@ -67,6 +70,7 @@ unset($conn);
                 <div>
                     <?= 'Questions: ' . $questionCount . '</br>' ?>
                     <?= 'Answers: ' . $answerCount . '</br>' ?>
+                    <?= 'Comments: ' . $commentCount . '</br>' ?>
                 </div>
             </div>
 
@@ -79,9 +83,12 @@ unset($conn);
                     <form action="./user-answers.php" method="get" style="margin:4px;">
                         <button type="submit" name="userID" value=<?= $userID;?> class="btn btn-primary text-white">Answers</button>
                     </form>
+                    <form action="./user-comments.php" method="get" style="margin:4px;">
+                        <button type="submit" name="userID" value=<?= $userID;?> class="btn btn-primary text-white">Comments</button>
+                    </form>
                 </div>
 
-                <div class="text-center" style="font-size:32px;">Questions</div>
+                <div class="text-center" style="font-size:32px;">Answers</div>
                 <table class="table table-striped text-center">
                 <thead>
                     <tr>

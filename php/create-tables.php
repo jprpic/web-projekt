@@ -71,8 +71,9 @@ CREATE TABLE $tableName(
     questionID INT NOT NULL,
     userID INT NOT NULL,
     comment VARCHAR(500),
+    creationTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (questionID) REFERENCES Questions(id) ON DELETE CASCADE,
-    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
+    FOREIGN KEY (userID) REFERENCES Users(id)
 );
 EOSQL;
 
@@ -80,15 +81,16 @@ $dbtable->createTable($tableName,$tableSQL);
 
 // Parent-Child-Comment table creation
 
-$tableName = "Parent_child_comments";
+$tableName = "Child_comments";
 $tableSQL = <<<EOSQL
 CREATE TABLE $tableName(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    parent_comment_id INT NOT NULL,
+    parentID INT NOT NULL,
     userID INT NOT NULL,
     comment VARCHAR(500),
-    FOREIGN KEY (parent_comment_id) REFERENCES Question_comments(id) ON DELETE CASCADE,
-    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
+    creationTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (parentID) REFERENCES Question_comments(id) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES Users(id)
 );
 EOSQL;
 

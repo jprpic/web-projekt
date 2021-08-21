@@ -48,31 +48,31 @@ class CommentManager{
             $tableName = "Question_comments";
         }
         else if($commentType=="reply"){
-            $tableName = "Parent_child_comments";
+            $tableName = "Child_comments";
         }
         $delete = $this->conn->prepare("DELETE FROM $tableName WHERE id = :commentID");
         $delete->execute([':commentID'=>$commentID]);
     }
 
-    public function replyToComment($userID,$parent_comment_ID){
+    public function replyToComment($userID,$parentID){
         $comment = "This is a reply!";
 
         $childCommentSQL = <<<EOSQL
-            INSERT INTO Parent_child_comments (parent_comment_id, userID, comment) VALUES (:parent_comment_id, :userID, :comment);
+            INSERT INTO Child_comments (parentID, userID, comment) VALUES (:parentID, :userID, :comment);
         EOSQL;
 
         $childCommentEntry = $this->conn->prepare($childCommentSQL);
-        $childCommentEntry->execute([':parent_comment_id'=>$parent_comment_ID,':userID'=>$userID,':comment'=>$comment]);
+        $childCommentEntry->execute([':parentID'=>$parentID,':userID'=>$userID,':comment'=>$comment]);
         
     }
 
-    public function loadChildComments($parent_comment_ID){
+    public function loadChildComments($parentID){
         $sql = <<<EOSQL
-            SELECT * FROM Parent_child_comments WHERE parent_comment_id = :parent_comment_id;
+            SELECT * FROM Child_comments WHERE parentID = :parentID;
         EOSQL;
 
         $comments = $this->conn->prepare($sql);
-        $comments->execute([':parent_comment_id'=>$parent_comment_ID]);
+        $comments->execute([':parentID'=>$parentID]);
         $comments = $comments->fetchAll(PDO::FETCH_ASSOC);
 
         return $comments;
@@ -85,7 +85,7 @@ class CommentManager{
             $tableName = "Question_comments";
         }
         else if($commentType=="reply"){
-            $tableName = "Parent_child_comments";
+            $tableName = "Child_comments";
         }
 
         $sql = <<<EOSQL
@@ -114,7 +114,7 @@ class CommentManager{
         $qCount = $qCount->fetch(PDO::FETCH_ASSOC);
 
         $sql = <<<EOSQL
-            SELECT COUNT(*) FROM Parent_child_comments WHERE userID = :userID;
+            SELECT COUNT(*) FROM Child_comments WHERE userID = :userID;
         EOSQL;
 
         $cCount = $this->conn->prepare($sql);
@@ -124,27 +124,45 @@ class CommentManager{
         return $cCount['COUNT(*)'] + $qCount['COUNT(*)'];
     }
 
+    public function getQuestionComments($userID){
+        $sql = <<<EOSQL
+            SELECT * FROM Question_comments WHERE userID = :userID;
+        EOSQL;
+
+        $questionComments = $this->conn->prepare($sql);
+        $questionComments->execute([':userID'=>$userID]);
+        $questionComments->setFetchMode(PDO::FETCH_ASSOC);
+        $questionComments = $questionComments->fetchAll();
+
+        return $questionComments;
+    }
+
+    public function getChildComments($userID){
+        $sql = <<<EOSQL
+            SELECT * FROM Child_comments WHERE userID = :userID;
+        EOSQL;
+
+        $childComments = $this->conn->prepare($sql);
+        $childComments->execute([':userID'=>$userID]);
+        $childComments->setFetchMode(PDO::FETCH_ASSOC);
+        $childComments = $childComments->fetchAll();
+
+        return $childComments;
+    }
+
+    public function getQuestionID($parentID){
+        $sql = <<<EOSQL
+            SELECT questionID FROM Question_comments where id = :parentID;
+        EOSQL;
+
+        $question = $this->conn->prepare($sql);
+        $question->execute([':parentID'=>$parentID]);
+        $question->setFetchMode(PDO::FETCH_ASSOC);
+        $question = $question->fetch();
+
+        return $question['questionID'];
+    }
+
 }
 
-
-/*
-CREATE TABLE Comments(
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    comment VARCHAR(500) NOT NULL,
-    userID INT,
-    questionID INT,
-    FOREIGN KEY (userID) REFERENCES Users(id),
-    FOREIGN KEY (questionID) REFERENCES Questions(id)
-);
-*/
-
-/*
-CREATE TABLE Parent_child_comment(
-    parent_comment_id INT,
-    child_comment_id INT,
-    PRIMARY KEY (parent_comment_id,child_comment_id),
-    FOREIGN KEY (parent_comment_id) REFERENCES Comments(id),
-    FOREIGN KEY (child_comment_id) REFERENCES Comments(id)
-);
-*/
 ?>
