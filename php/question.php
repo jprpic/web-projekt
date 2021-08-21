@@ -23,8 +23,13 @@ if(isset($_POST['commentSubmit'])){
     header("Refresh:0");
 }
 
-if(isset($_POST['removeComment'])){
-    $commentManager->removeComment($_POST['removeComment']);
+if(isset($_POST['removeQuestionComment'])){
+    $commentManager->removeComment($_POST['removeQuestionComment'],"question");
+    header("Refresh:0");
+}
+
+if(isset($_POST['removeChildComment'])){
+    $commentManager->removeComment($_POST['removeChildComment'],"reply");
     header("Refresh:0");
 }
 
@@ -33,8 +38,8 @@ if(isset($_POST['replyComment'])){
     header("Refresh:0");
 }
 
-if(isset($_POST['editComment'])){
-    $commentManager->editComment($_POST['editComment']);
+if(isset($_POST['editQuestionComment'])){
+    $commentManager->editComment($_POST['editQuestionComment'],"question");
     header("Refresh:0");
 }
 
@@ -169,8 +174,8 @@ unset($conn);
 
                                     
                                         <form action="" method="post" style="margin:-16px 0px 0px 0px;">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" name="removeComment" value=<?= $questionComment['id']; ?>>delete</button>
-                                            <button type="submit" class="btn btn-outline-secondary btn-sm" name="editComment" value=<?= $questionComment['id']; ?>>edit</button>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= $questionComment['id']; ?>>delete</button>
+                                            <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= $questionComment['id']; ?>>edit</button>
                                         </form>
                                     
                                     <?php else:?>
@@ -191,7 +196,7 @@ unset($conn);
                                         <?= $childComment['comment'];?>
                                         <?php if($userID == $childComment['userID']):?>
                                             <form action="" method="post">
-                                                <button type="submit" class="btn btn-outline-danger btn-sm" name="removeComment" value=<?= $childComment['id']; ?>>delete</button>
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= $childComment['id']; ?>>delete</button>
                                             </form>
                                         <?php endif;?> 
                                     </div>

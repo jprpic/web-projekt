@@ -47,29 +47,15 @@ $dbtable->createTable($tableName,$tableSQL);
 
 // Answers table creation
 
-// TODO - answer CHECK IN ("no","yes")
 $tableName = "Answers";
 $tableSQL= <<<EOSQL
 CREATE TABLE $tableName(
     questionID INT ,
     userID INT,
     answer VARCHAR(3) NOT NULL,
+    CHECK (answer = 'yes' OR answer = 'no'),
     PRIMARY KEY (questionID,userID),
     FOREIGN KEY (questionID) REFERENCES Questions(id) ON DELETE CASCADE,
-    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
-);
-EOSQL;
-
-$dbtable->createTable($tableName,$tableSQL);
-
-// Comment table creation
-
-$tableName = "Comments";
-$tableSQL = <<<EOSQL
-CREATE TABLE $tableName(
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    comment VARCHAR(255) NOT NULL,
-    userID INT NOT NULL,
     FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
 );
 EOSQL;
@@ -81,11 +67,12 @@ $dbtable->createTable($tableName,$tableSQL);
 $tableName = "Question_comments";
 $tableSQL = <<<EOSQL
 CREATE TABLE $tableName(
-    questionID INT,
-    commentID INT,
-    PRIMARY KEY (questionID,commentID),
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    questionID INT NOT NULL,
+    userID INT NOT NULL,
+    comment VARCHAR(500),
     FOREIGN KEY (questionID) REFERENCES Questions(id) ON DELETE CASCADE,
-    FOREIGN KEY (commentID) REFERENCES Comments(id) ON DELETE CASCADE
+    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
 );
 EOSQL;
 
@@ -96,11 +83,12 @@ $dbtable->createTable($tableName,$tableSQL);
 $tableName = "Parent_child_comments";
 $tableSQL = <<<EOSQL
 CREATE TABLE $tableName(
-    parent_comment_id INT,
-    child_comment_id INT,
-    PRIMARY KEY (parent_comment_id,child_comment_id),
-    FOREIGN KEY (parent_comment_id) REFERENCES Comments(id) ON DELETE CASCADE,
-    FOREIGN KEY (child_comment_id) REFERENCES Comments(id) ON DELETE CASCADE
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    parent_comment_id INT NOT NULL,
+    userID INT NOT NULL,
+    comment VARCHAR(500),
+    FOREIGN KEY (parent_comment_id) REFERENCES Question_comments(id) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
 );
 EOSQL;
 

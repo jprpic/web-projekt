@@ -22,8 +22,9 @@ if(isset($_POST['remove'])){
 
 require_once('./managers/answer-manager.php');
 require_once('./managers/account-manager.php');
+require_once('./managers/comment-manager.php');
 
-
+$commentManager = new CommentManager($conn);
 $answerManager = new AnswerManager($conn);
 $accountManager = new AccountManager($conn);
 $userID = $_GET['userID'];
@@ -33,6 +34,7 @@ $userName = $accountManager->getUsername($userID);
 
 $questionCount = $questionManager->countQuestions($userID);
 $answerCount = $answerManager->countUserAnswers($userID);
+$commentCount = $commentManager->countComments($userID);
 
 unset($conn);
 ?>
@@ -67,6 +69,7 @@ unset($conn);
                 <div>
                     <?= 'Questions: ' . $questionCount . '</br>' ?>
                     <?= 'Answers: ' . $answerCount . '</br>' ?>
+                    <?= 'Comments: ' . $commentCount . '</br>' ?>
                 </div>
             </div>
 
@@ -78,6 +81,9 @@ unset($conn);
                     </form>
                     <form action="./user-answers.php" method="get" style="margin:4px;">
                         <button type="submit" name="userID" value=<?= $userID;?> class="btn btn-primary text-white">Answers</button>
+                    </form>
+                    <form action="./user-comments.php" method="get" style="margin:4px;">
+                        <button type="submit" name="userID" value=<?= $userID;?> class="btn btn-primary text-white">Comments</button>
                     </form>
                 </div>
 

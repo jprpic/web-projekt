@@ -12,20 +12,28 @@ class CommentManager{
         $this->conn = null;
     }
 
-    public function answerQuestion($questionID,$userID,$comment){
-        $commentID = $this->addComment($userID,$comment);
+    /*
+    CREATE TABLE $tableName(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    questionID INT NOT NULL,
+    userID INT NOT NULL,
+    comment VARCHAR(500),
+    FOREIGN KEY (questionID) REFERENCES Questions(id) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
+    );*/
 
-        $linkQuestionComment = <<<EOSQL
-            INSERT INTO Question_comments (questionID, commentID) VALUES (:questionID, :commentID);
+    public function answerQuestion($questionID,$userID,$comment){
+        $questionComment = <<<EOSQL
+            INSERT INTO Question_comments (questionID, userID, comment) VALUES (:questionID, :userID, :comment);
         EOSQL;
 
-        $questionCommentEntry = $this->conn->prepare($linkQuestionComment);
-        $questionCommentEntry->execute([':questionID'=>$questionID,':commentID'=>$commentID]);
+        $questionCommentEntry = $this->conn->prepare($questionComment);
+        $questionCommentEntry->execute([':questionID'=>$questionID,':userID'=>$userID,':comment'=>$comment]);
     }
 
     public function loadQuestionComments($questionID){
         $sql = <<<EOSQL
-            SELECT * FROM Comments WHERE id IN (SELECT commentID FROM Question_comments WHERE questionID = :questionID);
+            SELECT * FROM Question_comments WHERE questionID = :questionID;
         EOSQL;
 
         $comments = $this->conn->prepare($sql);
@@ -35,39 +43,32 @@ class CommentManager{
         return $comments;
     }
 
-    public function removeComment($commentID){
-        $delete = $this->conn->prepare("DELETE FROM Comments WHERE id = :commentID");
+    public function removeComment($commentID,$commentType){
+        if($commentType=="question"){
+            $tableName = "Question_comments";
+        }
+        else if($commentType=="reply"){
+            $tableName = "Parent_child_comments";
+        }
+        $delete = $this->conn->prepare("DELETE FROM $tableName WHERE id = :commentID");
         $delete->execute([':commentID'=>$commentID]);
     }
 
     public function replyToComment($userID,$parent_comment_ID){
         $comment = "This is a reply!";
-        $child_comment_ID = $this->addComment($userID,$comment);
 
-        $linkReplyComment = <<<EOSQL
-            INSERT INTO Parent_child_comments (parent_comment_id, child_comment_id) VALUES (:parent_comment_id, :child_comment_id);
+        $childCommentSQL = <<<EOSQL
+            INSERT INTO Parent_child_comments (parent_comment_id, userID, comment) VALUES (:parent_comment_id, :userID, :comment);
         EOSQL;
 
-        $questionCommentEntry = $this->conn->prepare($linkReplyComment);
-        $questionCommentEntry->execute([':parent_comment_id'=>$parent_comment_ID,':child_comment_id'=>$child_comment_ID]);
+        $childCommentEntry = $this->conn->prepare($childCommentSQL);
+        $childCommentEntry->execute([':parent_comment_id'=>$parent_comment_ID,':userID'=>$userID,':comment'=>$comment]);
         
-    }
-
-    private function addComment($userID,$comment){
-        $createComment = <<<EOSQL
-            INSERT INTO Comments (comment, userID) VALUES(:comment,:userID);
-        EOSQL;
-
-        $commentEntry = $this->conn->prepare($createComment);
-        $commentEntry->execute([':comment'=>$comment,':userID'=>$userID]);
-        $commentID = $this->conn->lastInsertId();
-
-        return $commentID;
     }
 
     public function loadChildComments($parent_comment_ID){
         $sql = <<<EOSQL
-            SELECT * FROM Comments WHERE id IN (SELECT child_comment_id FROM Parent_child_comments WHERE parent_comment_id = :parent_comment_id);
+            SELECT * FROM Parent_child_comments WHERE parent_comment_id = :parent_comment_id;
         EOSQL;
 
         $comments = $this->conn->prepare($sql);
@@ -77,17 +78,50 @@ class CommentManager{
         return $comments;
     }
 
-    public function editComment($commentID){
+    public function editComment($commentID,$commentType){
         $comment = "This is an edited comment!";
 
+        if($commentType=="question"){
+            $tableName = "Question_comments";
+        }
+        else if($commentType=="reply"){
+            $tableName = "Parent_child_comments";
+        }
+
         $sql = <<<EOSQL
-            UPDATE Comments
-            SET comment = :comment
-            WHERE id = :commentID;
+                UPDATE $tableName
+                SET comment = :comment
+                WHERE id = :commentID
         EOSQL;
 
         $edit = $this->conn->prepare($sql);
-        $edit->execute([':comment'=>$comment,':commentID'=>$commentID]);
+        try{
+            $edit->execute([':comment'=>$comment,':commentID'=>$commentID]);
+        }
+        catch(PDOException $e){
+            echo $e->getMessage();
+        }
+        
+    }
+
+    public function countComments($userID){
+        $sql = <<<EOSQL
+            SELECT COUNT(*) FROM Question_comments WHERE userID = :userID;
+        EOSQL;
+
+        $qCount = $this->conn->prepare($sql);
+        $qCount->execute([':userID'=>$userID]);
+        $qCount = $qCount->fetch(PDO::FETCH_ASSOC);
+
+        $sql = <<<EOSQL
+            SELECT COUNT(*) FROM Parent_child_comments WHERE userID = :userID;
+        EOSQL;
+
+        $cCount = $this->conn->prepare($sql);
+        $cCount->execute([':userID'=>$userID]);
+        $cCount = $cCount->fetch(PDO::FETCH_ASSOC);
+
+        return $cCount['COUNT(*)'] + $qCount['COUNT(*)'];
     }
 
 }
