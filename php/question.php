@@ -168,31 +168,25 @@ unset($conn);
                 <?php foreach ($questionComments as &$questionComment) : ?>
                         <tr>
                             <td>
-                                <?php if($questionComment['comment'] !="[deleted]"):?>
-                                    <form action="./user-questions.php" method="get">
-                                        <button type="submit" class="btn btn-info text-white btn-sm" name="userID" value=<?= $questionComment['userID']; ?>><?= $accountManager->getUsername($questionComment['userID']); ?></button>
+                                <form action="./user-questions.php" method="get">
+                                    <button type="submit" class="btn btn-info text-white btn-sm" name="userID" value=<?= $questionComment['userID']; ?>><?= $accountManager->getUsername($questionComment['userID']); ?></button>
+                                </form>
+
+                                <p><?= $questionComment['comment']; ?></p>
+
+                                <?php if($userID == $questionComment['userID']):?>
+
+                                
+                                    <form action="" method="post" style="margin:-16px 0px 0px 0px;">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= $questionComment['id']; ?>>delete</button>
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= $questionComment['id']; ?>>edit</button>
                                     </form>
-
-                                    <p><?= $questionComment['comment']; ?></p>
-
-                                    <?php if($userID == $questionComment['userID']):?>
-
-                                    
-                                        <form action="" method="post" style="margin:-16px 0px 0px 0px;">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= $questionComment['id']; ?>>delete</button>
-                                            <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= $questionComment['id']; ?>>edit</button>
-                                        </form>
-                                    
-                                    <?php else:?>
-                                        <form action="" method="post" style="margin:-16px 0px 0px 0px;">
-                                            <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= $questionComment['id']; ?>>reply</button>
-                                        </form>
-                                    <?php endif;?> 
-
-
+                                
                                 <?php else:?>
-                                    <p class='text-muted font-italic'>[deleted]</p>
-                                <?php endif;?>
+                                    <form action="" method="post" style="margin:-16px 0px 0px 0px;">
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= $questionComment['id']; ?>>reply</button>
+                                    </form>
+                                <?php endif;?> 
 
                                 <?php $childComments = $commentManager->loadChildComments($questionComment['id']);
                                 foreach ($childComments as &$childComment):?>
