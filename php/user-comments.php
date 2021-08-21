@@ -15,9 +15,13 @@ require_once('./managers/comment-manager.php');
 $conn = DBConfig::getConnection();
 $commentManager = new CommentManager($conn);
 
-if(isset($_POST['remove'])){
-    $commentManager->removeComment($_POST['remove'],"question");
+if(isset($_POST['removeReply'])){
+    $commentManager->removeComment($_POST['removeReply'],$commentManager::TYPE_REPLY);
 }
+if(isset($_POST['removeComment'])){
+    $commentManager->removeComment($_POST['removeComment'],$commentManager::TYPE_COMMENT);
+}
+
 
 require_once('./managers/answer-manager.php');
 require_once('./managers/account-manager.php');
@@ -42,6 +46,8 @@ $comments = array();
 
 foreach($questionComments as &$questionComment){
     $comment = array(
+        'type' => $commentManager::TYPE_COMMENT,
+        'id' => $questionComment['id'],
         'questionID' => $questionComment['questionID'],
         'comment' => $questionComment['comment'],
         'creationTime' => strtotime($questionComment['creationTime'])
@@ -51,6 +57,8 @@ foreach($questionComments as &$questionComment){
 
 foreach($childComments as &$childComment){
     $comment = array(
+        'type' => $commentManager::TYPE_REPLY,
+        'id' => $childComment['id'],
         'questionID' => $commentManager->getQuestionID($childComment['parentID']),
         'comment' => $childComment['comment'],
         'creationTime' => strtotime($childComment['creationTime'])
@@ -123,12 +131,19 @@ unset($conn);
                     <table class="table table-striped text-center">
                         <tbody class="text-left">
                             <?php foreach($comments as &$comment):?>
+                                <?php $isReply = $comment['type']==$commentManager::TYPE_REPLY;?>
                                 <tr>
                                     <td>
                                         <form action="./question.php" method="get">
                                             <button type="submit" name="questionID" value=<?= $comment['questionID'];?> class="btn btn-danger text-white btn-sm"><?= $questionManager->getQuestion($comment['questionID']) ?></button>
                                         </form>
-                                        <span style="margin-left:16px;"><?= $comment['comment'];?></span>
+                                        <div class="d-flex p-2">
+                                            <span style="margin-left:16px;"><?= $comment['comment'];?></span>
+                                            <form action="" method="post">
+                                                <button type="submit" name=<?php if($isReply){echo "removeReply";}else{echo "removeComment";}?> value=<?= $comment['id'] ?>
+                                                class="btn btn-outline-danger btn-sm" style="margin-left:8px;">delete</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

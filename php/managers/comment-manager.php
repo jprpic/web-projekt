@@ -3,6 +3,8 @@
 class CommentManager{
 
     public $conn;
+    const TYPE_COMMENT= 'comment';
+    const TYPE_REPLY = 'reply';
 
     public function __construct($conn){
         $this->conn = $conn;
@@ -12,15 +14,6 @@ class CommentManager{
         $this->conn = null;
     }
 
-    /*
-    CREATE TABLE $tableName(
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    questionID INT NOT NULL,
-    userID INT NOT NULL,
-    comment VARCHAR(500),
-    FOREIGN KEY (questionID) REFERENCES Questions(id) ON DELETE CASCADE,
-    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
-    );*/
 
     public function answerQuestion($questionID,$userID,$comment){
         $questionComment = <<<EOSQL
@@ -44,10 +37,10 @@ class CommentManager{
     }
 
     public function removeComment($commentID,$commentType){
-        if($commentType=="question"){
+        if($commentType==self::TYPE_COMMENT){
             $tableName = "Question_comments";
         }
-        else if($commentType=="reply"){
+        else if($commentType==self::TYPE_REPLY){
             $tableName = "Child_comments";
         }
         $delete = $this->conn->prepare("DELETE FROM $tableName WHERE id = :commentID");
@@ -81,10 +74,10 @@ class CommentManager{
     public function editComment($commentID,$commentType){
         $comment = "This is an edited comment!";
 
-        if($commentType=="question"){
+        if($commentType==self::TYPE_COMMENT){
             $tableName = "Question_comments";
         }
-        else if($commentType=="reply"){
+        else if($commentType==self::TYPE_REPLY){
             $tableName = "Child_comments";
         }
 
