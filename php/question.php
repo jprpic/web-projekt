@@ -147,24 +147,20 @@ unset($conn);
             if($previousQuestionID){echo "value=$previousQuestionID";}
             else{echo "disabled";} ?>>previous</button>
         </form>
-        <?php if(!$isQuestionOwner):?>
-            <form  action="" method="post">
+        <form action="" method="post">
                 <button type="submit" name="noanswer" style="margin:0px 8px;"value=<?= $questionID?> class="btn btn-danger text-white"
-                <?php if($userAnswer=="no"){echo "disabled";}?>>No</button>
-            </form>
-        <?php endif;?>
+                <?php if($userAnswer=="no" || $isQuestionOwner){echo "disabled";}?>>No</button>
+        </form>
         <div class="text-left bg-danger text-white" style="padding: 64px;font-size: 32px;margin:32px;">
             <?= $answerCount['no']; ?>
         </div>
         <div class="text-right bg-success text-white" style="padding: 64px;font-size: 32px;margin:32px;">
             <?= $answerCount['yes']; ?>
         </div>
-        <?php if(!$isQuestionOwner):?>
-            <form action="" method="post">
-                <button type="submit" name="yesanswer" value=<?= $questionID?> class="btn btn-success text-white"
-                <?php if($userAnswer=="yes"){echo "disabled";}?>>Yes</button>
-            </form>
-        <?php endif;?>
+        <form action="" method="post">
+            <button type="submit" name="yesanswer" value=<?= $questionID?> class="btn btn-success text-white"
+            <?php if($userAnswer=="yes" || $isQuestionOwner){echo "disabled";}?>>Yes</button>
+        </form>
         <form action="./question.php" method="get">
             <button type="submit" name="questionID"  style="margin:0px 8px;" class="btn btn-info btn-sm"<?php
             $nextQuestionID = $questionManager->getNextQuestion($userID,$questionID);

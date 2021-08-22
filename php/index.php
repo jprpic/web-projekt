@@ -31,7 +31,7 @@ if(isset($_POST['noanswer'])){
 
 require_once('./managers/question-manager.php');
 $questionManager = new QuestionManager($conn);
-$availableQuestions = $questionManager->getAvailableQuestions($userID);
+$availableQuestions = $questionManager->getAvailableQuestions();
 
 unset($conn);
 ?>
@@ -76,15 +76,17 @@ unset($conn);
                             <button type="submit" name="questionID" value=<?= $question['id'] ?> class="btn btn-danger text-white"><?= htmlspecialchars($questionManager->getQuestion($question['id'])) ?></button>
                         </form>
                     </td>
+                    <?php $isQuestionOwner = $questionManager->getOwner($question['id']) == $userID?>
                     <td>
                         <form action="" method="POST">
-                            <button type="submit" name="yesanswer" value=<?=$question['id']?> class="btn btn-primary text-white">Yes</button>
+                            <button type="submit" name="yesanswer" value=<?=$question['id']?> <?php if($isQuestionOwner){echo "disabled";}?> class="btn btn-primary text-white">Yes</button>
                         </form>
                     </td>
                     <td>
                         <form action="" method="POST">
-                            <button type="submit" name="noanswer" value=<?=$question['id']?> class="btn btn-danger text-white">No</button>
+                            <button type="submit" name="noanswer" value=<?=$question['id']?> <?php if($isQuestionOwner){echo "disabled";}?> class="btn btn-danger text-white">No</button>
                         </form>
+                    </td>
                 </tr>
             <?php endwhile; ?>
         </tbody>

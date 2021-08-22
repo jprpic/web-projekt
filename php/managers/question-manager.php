@@ -102,8 +102,19 @@ class QuestionManager{
         }
     }
 
+    public function getAvailableQuestions(){
+        $sql = <<<EOSQL
+            SELECT * FROM Questions ORDER BY creationTime DESC;
+        EOSQL;
 
-    public function getAvailableQuestions($userID){
+        $questions = $this->conn->prepare($sql);
+        $questions->execute();
+        $questions->setFetchMode(PDO::FETCH_ASSOC);
+        return $questions;
+    }
+
+
+    /*public function getAvailableQuestions($userID){
         $sql = <<<EOSQL
             SELECT * FROM Questions WHERE id NOT IN (SELECT questionID FROM Answers where userID = :userID) AND id NOT IN (SELECT id FROM Questions where userID = :userID)
             ORDER BY creationTime DESC;
@@ -113,7 +124,7 @@ class QuestionManager{
         $questions->execute([':userID'=>$userID,':userID'=>$userID]);
         $questions->setFetchMode(PDO::FETCH_ASSOC);
         return $questions;
-    }
+    }*/
 
     public function getQuestion($questionID){
         $sql = <<<EOSQL
