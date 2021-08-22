@@ -26,7 +26,7 @@ class CommentManager{
 
     public function loadQuestionComments($questionID){
         $sql = <<<EOSQL
-            SELECT * FROM Question_comments WHERE questionID = :questionID;
+            SELECT * FROM Question_comments WHERE questionID = :questionID ORDER BY creationTime DESC;
         EOSQL;
 
         $comments = $this->conn->prepare($sql);
@@ -47,16 +47,13 @@ class CommentManager{
         $delete->execute([':commentID'=>$commentID]);
     }
 
-    public function replyToComment($userID,$parentID){
-        $comment = "This is a reply!";
-
+    public function replyToComment($userID,$parentID,$comment){
         $childCommentSQL = <<<EOSQL
             INSERT INTO Child_comments (parentID, userID, comment) VALUES (:parentID, :userID, :comment);
         EOSQL;
 
         $childCommentEntry = $this->conn->prepare($childCommentSQL);
         $childCommentEntry->execute([':parentID'=>$parentID,':userID'=>$userID,':comment'=>$comment]);
-        
     }
 
     public function loadChildComments($parentID){
