@@ -35,6 +35,9 @@ if(isset($_POST['submit'])){
     if($user){
         session_start();
         $_SESSION["userID"]=$user['id'];
+        if($accountManager->isAdmin($user['id'])){
+            $_SESSION["admin"]='true';
+        }
         header('Location:index.php');
     }
 }

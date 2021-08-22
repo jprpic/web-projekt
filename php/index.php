@@ -6,6 +6,9 @@ if(!isset($_SESSION['userID'])){
 
 if(isset($_POST['logout'])){
     unset($_SESSION["userID"]);
+    if(isset($_SESSION['admin'])){
+        unset($_SESSION['admin']);
+    }
     header('Location:./login.php');
 }
 

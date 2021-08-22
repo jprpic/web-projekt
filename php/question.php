@@ -6,6 +6,9 @@ if(!isset($_SESSION['userID'])){
 
 if(isset($_POST['logout'])){
     unset($_SESSION["userID"]);
+    if(isset($_SESSION['admin'])){
+        unset($_SESSION['admin']);
+    }
     header('Location:./login.php');
 }
 
@@ -180,7 +183,7 @@ unset($conn);
 
                                 <p><?= $questionComment['comment']; ?></p>
                                 <form action="" method="post" style="margin:-16px 0px 0px 0px;">
-                                <?php if($userID == $questionComment['userID']):?>
+                                <?php if($userID == $questionComment['userID'] || isset($_SESSION['admin'])):?>
                                         <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= $questionComment['id']; ?>>delete</button>
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= $questionComment['id']; ?>>edit</button>
                                 <?php endif;?>
@@ -192,8 +195,10 @@ unset($conn);
                                     <div style="margin-left: 32px;">
                                         <?= $childComment['comment'];?>
                                         <form action="" method="post">
+                                        <?php if($userID == $childComment['userID'] || isset($_SESSION['admin'])):?>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= $childComment['id']; ?>>delete</button>
+                                        <?php endif;?> 
                                         <?php if($userID == $childComment['userID']):?>
-                                                <button type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= $childComment['id']; ?>>delete</button>
                                                 <button type="submit" class="btn btn-outline-secondary btn-sm" name="editChildComment" value=<?= $childComment['id']; ?>>edit</button>
                                         <?php endif;?> 
                                         <input type="hidden" name="replyToUserID" value=<?= $childComment['userID'];?>>

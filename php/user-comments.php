@@ -6,6 +6,9 @@ if(!isset($_SESSION['userID'])){
 
 if(isset($_POST['logout'])){
     unset($_SESSION["userID"]);
+    if(isset($_SESSION['admin'])){
+        unset($_SESSION['admin']);
+    }
     header('Location:./login.php');
 }
 
@@ -32,7 +35,7 @@ $questionManager = new QuestionManager($conn);
 $answerManager = new AnswerManager($conn);
 $accountManager = new AccountManager($conn);
 $userID = $_GET['userID'];
-$isOwner = $userID == $_SESSION['userID'];
+$isOwner = ($userID == $_SESSION['userID'] || isset($_SESSION['admin']));
 $userName = $accountManager->getUsername($userID);
 
 $questionCount = $questionManager->countQuestions($userID);

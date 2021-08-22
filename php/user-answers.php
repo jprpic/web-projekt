@@ -6,9 +6,11 @@ if(!isset($_SESSION['userID'])){
 
 if(isset($_POST['logout'])){
     unset($_SESSION["userID"]);
+    if(isset($_SESSION['admin'])){
+        unset($_SESSION['admin']);
+    }
     header('Location:./login.php');
 }
-
 require_once('./dbconfig.php');
 
 require_once('./managers/answer-manager.php');
@@ -30,7 +32,7 @@ $questionManager = new QuestionManager($conn);
 $accountManager = new AccountManager($conn);
 $commentManager = new CommentManager($conn);
 $userID = $_GET['userID'];
-$isOwner = $userID == $ownerID;
+$isOwner = ($userID == $_SESSION['userID'] || isset($_SESSION['admin']));
 $questionIDs = $answerManager->getAnsweredQuestionIDs($userID);
 $userName = $accountManager->getUsername($userID);
 

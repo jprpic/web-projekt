@@ -98,6 +98,18 @@ $dbtable->createTable($tableName,$tableSQL);
 
 // All tables created -- unset connection
 
+$tableName = "Admins";
+$tableSQL = <<<EOSQL
+CREATE TABLE $tableName(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userID INT NOT NULL UNIQUE,
+    FOREIGN KEY (userID) REFERENCES Users(id)
+);
+EOSQL;
+
+$dbtable->createTable($tableName,$tableSQL);
+
+
 unset($conn);
 ?>
 
