@@ -28,9 +28,6 @@ class QuestionManager{
 
     private function formatQuestion($question){
         $question = ltrim($question);
-        if(!preg_match('~^[\s\S]+[!?.]+$~u', $question)) {
-            $question .= "?";
-        }
         return $question;
     }
 

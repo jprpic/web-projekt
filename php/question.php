@@ -9,20 +9,65 @@ if(isset($_POST['logout'])){
     header('Location:./login.php');
 }
 
-
 require_once('./dbconfig.php');
-require_once('./managers/question-manager.php');
-require_once('./managers/answer-manager.php');
+require_once('./managers/comment-manager.php');
 require_once('./managers/account-manager.php');
 
+$questionID = $_GET['questionID'];
+$userID = $_SESSION['userID'];
 $conn = DBConfig::getConnection();
+$commentManager = new CommentManager($conn);
+$accountManager = new AccountManager($conn);
+
+if(isset($_POST['commentSubmit'])){
+    $comment = $_POST['commentText'];
+    $commentManager->answerQuestion($questionID,$userID,$comment);
+    header("Refresh:0");
+}
+
+if(isset($_POST['removeQuestionComment'])){
+    $commentManager->removeComment($_POST['removeQuestionComment'],$commentManager::TYPE_COMMENT);
+    header("Refresh:0");
+}
+
+if(isset($_POST['removeChildComment'])){
+    $commentManager->removeComment($_POST['removeChildComment'],$commentManager::TYPE_REPLY);
+    header("Refresh:0");
+}
+
+if(isset($_POST['replyComment'])){
+    $comment = "This is a reply!";
+    if(isset($_POST['replyToUserID'])){
+        echo $_POST['replyToUserID'];
+        $comment = '@' . $accountManager->getUsername($_POST['replyToUserID']) . ' ' . $comment;
+    }
+    $commentManager->replyToComment($userID,$_POST['replyComment'],$comment);
+}
+
+if(isset($_POST['editQuestionComment'])){
+    $commentManager->editComment($_POST['editQuestionComment'],$commentManager::TYPE_COMMENT);
+    header("Refresh:0");
+}
+
+if(isset($_POST['editChildComment'])){
+    $commentManager->editComment($_POST['editChildComment'],$commentManager::TYPE_REPLY);
+    header("Refresh:0");
+}
+
+$questionComments = $commentManager->getQuestionComments($questionID);
+
+require_once('./managers/question-manager.php');
+require_once('./managers/answer-manager.php');
+
+
+
 $questionManager = new QuestionManager($conn);
 $answerManager = new AnswerManager($conn);
-$accountManager = new AccountManager($conn);
-$questionID = $_GET['questionID'];
+
+
 $questionOwnerID = $questionManager->getOwner($questionID); 
 $questionOwner = $accountManager->getUsername($questionOwnerID);
-$userID = $_SESSION['userID'];
+
 
 $userAnswer = $answerManager->getUserAnswer($questionID,$userID);
 $isQuestionOwner = $questionOwnerID == $userID;
@@ -67,18 +112,18 @@ unset($conn);
 </head>
 
 <body>
-        <section class="d-flex justify-content-between bg-light text-right">
-            <a href="./index.php"><button class="btn btn-primary text-white" style="margin:4px;">Home</button></a>
-            <div class="d-flex justify-content-end" style="margin:4px;">
-                <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
-                <form action="./user-questions.php" method="get" style="margin:0px 4px;">
-                    <button type="submit" name="userID" value=<?= $_SESSION['userID'];?> class="btn btn-primary text-white">Your profile</button>
-                </form>
-                <form action="" method="POST">
-                    <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
-                </form>
-            </div>
-        </section>
+    <section class="d-flex justify-content-between bg-light text-right">
+        <a href="./index.php"><button class="btn btn-primary text-white" style="margin:4px;">Home</button></a>
+        <div class="d-flex justify-content-end" style="margin:4px;">
+            <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
+            <form action="./user-questions.php" method="get" style="margin:0px 4px;">
+                <button type="submit" name="userID" value=<?= $_SESSION['userID'];?> class="btn btn-primary text-white">Your profile</button>
+            </form>
+            <form action="" method="POST">
+                <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
+            </form>
+        </div>
+    </section>
 
     <div class="text-center" style="padding: 64px;font-size: 32px;">
         <?= htmlspecialchars($question); ?>
@@ -114,7 +159,55 @@ unset($conn);
         </form>
     </section>
 
-    
+    <section class="d-flex p-2 text-left bg-light">
+        <form method="POST" action="">
+            <label for="email">Comment:</label></br>
+            <textarea id="commentText" name="commentText" rows="2" cols="100" style="padding:4px 0px 0px 8px;"></textarea>
+            <input type="submit" id="commentSubmit" name="commentSubmit" value ="Submit" class="btn btn-primary text-white" style="margin-top:20px;"></br>
+        </form>
+    </section>
+
+
+    <section>
+        <table class="table table-striped text-center">
+            <tbody class="text-left">
+                <?php foreach ($questionComments as &$questionComment) : ?>
+                        <tr>
+                            <td>
+                                <form action="./user-questions.php" method="get">
+                                    <button type="submit" class="btn btn-info text-white btn-sm" name="userID" value=<?= $questionComment['userID']; ?>><?= $accountManager->getUsername($questionComment['userID']); ?></button>
+                                </form>
+
+                                <p><?= $questionComment['comment']; ?></p>
+                                <form action="" method="post" style="margin:-16px 0px 0px 0px;">
+                                <?php if($userID == $questionComment['userID']):?>
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= $questionComment['id']; ?>>delete</button>
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= $questionComment['id']; ?>>edit</button>
+                                <?php endif;?>
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= $questionComment['id']; ?>>reply</button>
+                                </form>
+
+                                <?php $childComments = $commentManager->getParentsChildComments($questionComment['id']);
+                                foreach ($childComments as &$childComment):?>
+                                    <div style="margin-left: 32px;">
+                                        <?= $childComment['comment'];?>
+                                        <form action="" method="post">
+                                        <?php if($userID == $childComment['userID']):?>
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= $childComment['id']; ?>>delete</button>
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm" name="editChildComment" value=<?= $childComment['id']; ?>>edit</button>
+                                        <?php endif;?> 
+                                        <input type="hidden" name="replyToUserID" value=<?= $childComment['userID'];?>>
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= $questionComment['id']; ?>>reply</button>
+                                        </form>
+                                    </div>
+                                <?php endforeach; ?>
+                            </td>
+                        </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </section>
+
 
 </body>
 

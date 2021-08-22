@@ -39,7 +39,7 @@ CREATE TABLE $tableName(
     id INT AUTO_INCREMENT PRIMARY KEY,
     question VARCHAR(255) NOT NULL,
     userID INT NOT NULL,
-    FOREIGN KEY (userID) REFERENCES Users(id)
+    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
 );
 EOSQL;
 
@@ -53,13 +53,50 @@ CREATE TABLE $tableName(
     questionID INT ,
     userID INT,
     answer VARCHAR(3) NOT NULL,
+    CHECK (answer = 'yes' OR answer = 'no'),
     PRIMARY KEY (questionID,userID),
-    FOREIGN KEY (questionID) REFERENCES Questions(id),
+    FOREIGN KEY (questionID) REFERENCES Questions(id) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE
+);
+EOSQL;
+
+$dbtable->createTable($tableName,$tableSQL);
+
+// Question_comments table creation
+
+$tableName = "Question_comments";
+$tableSQL = <<<EOSQL
+CREATE TABLE $tableName(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    questionID INT NOT NULL,
+    userID INT NOT NULL,
+    comment VARCHAR(500),
+    creationTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (questionID) REFERENCES Questions(id) ON DELETE CASCADE,
     FOREIGN KEY (userID) REFERENCES Users(id)
 );
 EOSQL;
 
 $dbtable->createTable($tableName,$tableSQL);
+
+// Parent-Child-Comment table creation
+
+$tableName = "Child_comments";
+$tableSQL = <<<EOSQL
+CREATE TABLE $tableName(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    parentID INT NOT NULL,
+    userID INT NOT NULL,
+    comment VARCHAR(500),
+    creationTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (parentID) REFERENCES Question_comments(id) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES Users(id)
+);
+EOSQL;
+
+$dbtable->createTable($tableName,$tableSQL);
+
+// All tables created -- unset connection
 
 unset($conn);
 ?>
