@@ -20,13 +20,27 @@ $answerManager = new AnswerManager($conn);
 $userID = $_SESSION['userID'];
 
 if(isset($_POST['yesanswer'])){
-    $answerManager->answerQuestion($_POST['yesanswer'],$userID,"yes");
-    header("Refresh:0");
+    $questionID = $_POST['yesanswer'];
+    if($answerManager->getUserAnswer($questionID,$userID)){
+        $answerManager->changeAnswer($questionID,$userID,"yes");
+    }
+    else{
+        $answerManager->answerQuestion($questionID,$userID,"yes");
+    }
+    $location = 'Location:./question.php?questionID=' . $questionID;
+    header($location);
 }
 
 if(isset($_POST['noanswer'])){
-    $answerManager->answerQuestion($_POST['noanswer'],$userID,"no");
-    header("Refresh:0");
+    $questionID = $_POST['noanswer'];
+    if($answerManager->getUserAnswer($questionID,$userID)){
+        $answerManager->changeAnswer($questionID,$userID,"no");
+    }
+    else{
+        $answerManager->answerQuestion($questionID,$userID,"no");
+    }
+    $location = 'Location:./question.php?questionID=' . $questionID;
+    header($location);
 }
 
 require_once('./managers/question-manager.php');
@@ -70,6 +84,7 @@ unset($conn);
             </thead>
         <tbody>
             <?php while ($question = $availableQuestions->fetch()) : ?>
+                <?php $questionAnswer = $answerManager->getUserAnswer($question['id'],$userID)?>
                 <tr>
                     <td>
                         <form action="question.php" method="get">
@@ -79,12 +94,12 @@ unset($conn);
                     <?php $isQuestionOwner = $questionManager->getOwner($question['id']) == $userID?>
                     <td>
                         <form action="" method="POST">
-                            <button type="submit" name="yesanswer" value=<?=$question['id']?> <?php if($isQuestionOwner){echo "disabled";}?> class="btn btn-primary text-white">Yes</button>
+                            <button type="submit" name="yesanswer" value=<?=$question['id']?> <?php if($isQuestionOwner || $questionAnswer=="yes"){echo "disabled";}?> class="btn btn-primary text-white">Yes</button>
                         </form>
                     </td>
                     <td>
                         <form action="" method="POST">
-                            <button type="submit" name="noanswer" value=<?=$question['id']?> <?php if($isQuestionOwner){echo "disabled";}?> class="btn btn-danger text-white">No</button>
+                            <button type="submit" name="noanswer" value=<?=$question['id']?> <?php if($isQuestionOwner || $questionAnswer=="no"){echo "disabled";}?> class="btn btn-danger text-white">No</button>
                         </form>
                     </td>
                 </tr>

@@ -180,7 +180,7 @@ class QuestionManager{
         return (bool)$questionExists;
     }
 
-    public function getNextQuestion($userID,$currentQuestionID){
+    public function getPreviousQuestion($userID,$currentQuestionID){
         $questions = $this->getAvailableQuestions($userID);
         $nextQuestionID = null;
         while($question = $questions->fetch()){
@@ -193,8 +193,8 @@ class QuestionManager{
         }
         return $nextQuestionID;
     }
-
-    public function getPreviousQuestion($userID,$currentQuestionID){
+    
+    public function getNextQuestion($userID,$currentQuestionID){
         $questions = $this->getAvailableQuestions($userID);
         $nextQuestionID = null;
         while($question = $questions->fetch()){
