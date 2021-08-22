@@ -14,8 +14,16 @@ if(isset($_POST['logout'])){
 
 require_once('./dbconfig.php');
 require_once('./managers/comment-manager.php');
+require_once('./managers/account-manager.php');
 
 $conn = DBConfig::getConnection();
+$accountManager = new AccountManager($conn);
+$userID = $_GET['userID'];
+
+if(!$accountManager->exists($userID)){
+    header('Location:./missing-data.php');
+}
+
 $commentManager = new CommentManager($conn);
 
 if(isset($_POST['removeReply'])){
@@ -27,14 +35,11 @@ if(isset($_POST['removeComment'])){
 
 
 require_once('./managers/answer-manager.php');
-require_once('./managers/account-manager.php');
 require_once('./managers/question-manager.php');
 
 
 $questionManager = new QuestionManager($conn);
 $answerManager = new AnswerManager($conn);
-$accountManager = new AccountManager($conn);
-$userID = $_GET['userID'];
 $isOwner = ($userID == $_SESSION['userID'] || isset($_SESSION['admin']));
 $userName = $accountManager->getUsername($userID);
 

@@ -105,13 +105,14 @@ class QuestionManager{
 
     public function getAvailableQuestions($userID){
         $sql = <<<EOSQL
-            SELECT * FROM Questions WHERE id NOT IN (SELECT questionID FROM Answers where userID = :userID) AND id NOT IN (SELECT id FROM Questions where userID = :userID);
+            SELECT * FROM Questions WHERE id NOT IN (SELECT questionID FROM Answers where userID = :userID) AND id NOT IN (SELECT id FROM Questions where userID = :userID)
+            ORDER BY creationTime DESC;
         EOSQL;
 
-        $query = $this->conn->prepare($sql);
-        $query->execute([':userID'=>$userID,':userID'=>$userID]);
-        $query->setFetchMode(PDO::FETCH_ASSOC);
-        return $query;
+        $questions = $this->conn->prepare($sql);
+        $questions->execute([':userID'=>$userID,':userID'=>$userID]);
+        $questions->setFetchMode(PDO::FETCH_ASSOC);
+        return $questions;
     }
 
     public function getQuestion($questionID){
@@ -159,6 +160,44 @@ class QuestionManager{
 
         $removeQuestion = $this->conn->prepare($sql);
         $removeQuestion->execute([':questionID'=>$questionID]);
+    }
+
+    public function exists($questionID){
+        $questionExists = $this->conn->prepare("SELECT id FROM Questions where id = :questionID");
+        $questionExists->execute([':questionID'=>$questionID]);
+        $questionExists = $questionExists->fetch(PDO::FETCH_ASSOC);
+        return (bool)$questionExists;
+    }
+
+    public function getNextQuestion($userID,$currentQuestionID){
+        $questions = $this->getAvailableQuestions($userID);
+        $nextQuestionID = null;
+        while($question = $questions->fetch()){
+            if($question['id'] > $currentQuestionID){
+                $nextQuestionID = $question['id'];
+            }
+            else{
+                return $nextQuestionID;
+            }
+        }
+        return $nextQuestionID;
+    }
+
+    public function getPreviousQuestion($userID,$currentQuestionID){
+        $questions = $this->getAvailableQuestions($userID);
+        $nextQuestionID = null;
+        while($question = $questions->fetch()){
+            $nextQuestionID = $question['id'];
+            if($question){
+                if($question['id'] < $currentQuestionID){
+                    return $nextQuestionID;
+                }
+            }
+            else{
+                return null;
+            }
+            
+        }
     }
 }
 

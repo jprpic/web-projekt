@@ -26,6 +26,10 @@ $accountManager = new AccountManager($conn);
 $questionManager = new QuestionManager($conn);
 $answerManager = new AnswerManager($conn);
 
+if(!$questionManager->exists($questionID)){
+    header('Location:./missing-data.php');
+}
+
 if(isset($_POST['removeQuestion'])){
     $questionManager->removeQuestion($questionID);
     header('Location:./index.php');
@@ -137,9 +141,15 @@ unset($conn);
         <?php endif;?>
     </div>
     <div class="d-flex justify-content-center">
+        <form action="./question.php" method="get">
+            <button type="submit" name="questionID" class="btn btn-info btn-sm" <?php
+            $previousQuestionID = $questionManager->getPreviousQuestion($userID,$questionID);
+            if($previousQuestionID){echo "value=$previousQuestionID";}
+            else{echo "disabled";} ?>>previous</button>
+        </form>
         <?php if(!$isQuestionOwner):?>
             <form  action="" method="post">
-                <button type="submit" name="noanswer" value=<?= $questionID?> class="btn btn-danger text-white"
+                <button type="submit" name="noanswer" style="margin:0px 8px;"value=<?= $questionID?> class="btn btn-danger text-white"
                 <?php if($userAnswer=="no"){echo "disabled";}?>>No</button>
             </form>
         <?php endif;?>
@@ -155,6 +165,12 @@ unset($conn);
                 <?php if($userAnswer=="yes"){echo "disabled";}?>>Yes</button>
             </form>
         <?php endif;?>
+        <form action="./question.php" method="get">
+            <button type="submit" name="questionID"  style="margin:0px 8px;" class="btn btn-info btn-sm"<?php
+            $nextQuestionID = $questionManager->getNextQuestion($userID,$questionID);
+            if($nextQuestionID){echo "value=$nextQuestionID";}
+            else{echo "disabled";} ?>>next</button>
+        </form>
     </div>
 
     <section class="bg-light text-right d-flex justify-content-end" style="margin:0px 8px 0px 0px;">
