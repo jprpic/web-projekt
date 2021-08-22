@@ -29,8 +29,6 @@ if(isset($_POST['create'])){
         header('Location:login.php');
     }
 }
-
-
 ?>
 
 

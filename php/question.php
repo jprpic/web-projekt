@@ -15,12 +15,21 @@ if(isset($_POST['logout'])){
 require_once('./dbconfig.php');
 require_once('./managers/comment-manager.php');
 require_once('./managers/account-manager.php');
+require_once('./managers/question-manager.php');
+require_once('./managers/answer-manager.php');
 
 $questionID = $_GET['questionID'];
 $userID = $_SESSION['userID'];
 $conn = DBConfig::getConnection();
 $commentManager = new CommentManager($conn);
 $accountManager = new AccountManager($conn);
+$questionManager = new QuestionManager($conn);
+$answerManager = new AnswerManager($conn);
+
+if(isset($_POST['removeQuestion'])){
+    $questionManager->removeQuestion($questionID);
+    header('Location:./index.php');
+}
 
 if(isset($_POST['commentSubmit'])){
     $comment = $_POST['commentText'];
@@ -59,14 +68,6 @@ if(isset($_POST['editChildComment'])){
 
 $questionComments = $commentManager->getQuestionComments($questionID);
 
-require_once('./managers/question-manager.php');
-require_once('./managers/answer-manager.php');
-
-
-
-$questionManager = new QuestionManager($conn);
-$answerManager = new AnswerManager($conn);
-
 
 $questionOwnerID = $questionManager->getOwner($questionID); 
 $questionOwner = $accountManager->getUsername($questionOwnerID);
@@ -74,6 +75,7 @@ $questionOwner = $accountManager->getUsername($questionOwnerID);
 
 $userAnswer = $answerManager->getUserAnswer($questionID,$userID);
 $isQuestionOwner = $questionOwnerID == $userID;
+$isAdmin = isset($_SESSION['admin']);
 
 if(isset($_POST['yesanswer'])){
     if(!$userAnswer){
@@ -155,11 +157,16 @@ unset($conn);
         <?php endif;?>
     </div>
 
-    <section class="bg-light text-right" style="margin:0px 8px 0px 0px;">
+    <section class="bg-light text-right d-flex justify-content-end" style="margin:0px 8px 0px 0px;">
         <form action="./user-questions.php" method="get">
             <div style="display: inline;">Question from: </div>
-            <button type="submit" class="btn btn-info text-white" style="margin:4px;" name="userID" value=<?= $questionOwnerID; ?>><?= $questionOwner; ?></button>
+            <button type="submit" class="btn btn-info text-white btn-sm" style="margin:4px;" name="userID" value=<?= $questionOwnerID; ?>><?= $questionOwner; ?></button>
         </form>
+        <?php if($isQuestionOwner || $isAdmin):?>
+            <form action="" method="post">
+                <button type="submit" class="btn btn-outline-danger btn-sm" style="margin:4px;" name="removeQuestion" value=<?= $questionID; ?>>delete</button>
+            </form>
+        <?php endif;?>
     </section>
 
     <section class="d-flex p-2 text-left bg-light">
@@ -183,7 +190,8 @@ unset($conn);
 
                                 <p><?= $questionComment['comment']; ?></p>
                                 <form action="" method="post" style="margin:-16px 0px 0px 0px;">
-                                <?php if($userID == $questionComment['userID'] || isset($_SESSION['admin'])):?>
+                                <?php if($userID == $questionComment['userID'] || $isAdmin):?>
+
                                         <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= $questionComment['id']; ?>>delete</button>
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= $questionComment['id']; ?>>edit</button>
                                 <?php endif;?>
@@ -195,7 +203,7 @@ unset($conn);
                                     <div style="margin-left: 32px;">
                                         <?= $childComment['comment'];?>
                                         <form action="" method="post">
-                                        <?php if($userID == $childComment['userID'] || isset($_SESSION['admin'])):?>
+                                        <?php if($userID == $childComment['userID'] || $isAdmin):?>
                                             <button type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= $childComment['id']; ?>>delete</button>
                                         <?php endif;?> 
                                         <?php if($userID == $childComment['userID']):?>
