@@ -191,6 +191,7 @@ unset($conn);
                                 <p><?= $questionComment['comment']; ?></p>
                                 <form action="" method="post" style="margin:-16px 0px 0px 0px;">
                                 <?php if($userID == $questionComment['userID'] || $isAdmin):?>
+
                                         <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= $questionComment['id']; ?>>delete</button>
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= $questionComment['id']; ?>>edit</button>
                                 <?php endif;?>
