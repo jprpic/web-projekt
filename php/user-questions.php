@@ -14,22 +14,29 @@ if(isset($_POST['logout'])){
 
 require_once('./dbconfig.php');
 require_once('./managers/question-manager.php');
+require_once('./managers/account-manager.php');
 
 $conn = DBConfig::getConnection();
-$questionManager = new QuestionManager($conn);
+$accountManager = new AccountManager($conn);
+$userID = $_GET['userID'];
 
+if(!$accountManager->exists($userID)){
+    header('Location:./missing-data.php');
+}
+
+$questionManager = new QuestionManager($conn);
 if(isset($_POST['remove'])){
     $questionManager->removeQuestion($_POST['remove']);
 }
 
 require_once('./managers/answer-manager.php');
-require_once('./managers/account-manager.php');
+
 require_once('./managers/comment-manager.php');
 
 $commentManager = new CommentManager($conn);
 $answerManager = new AnswerManager($conn);
-$accountManager = new AccountManager($conn);
-$userID = $_GET['userID'];
+
+
 $questionIDs = $questionManager->getUserQuestionIDs($userID);
 $isOwner = ($userID == $_SESSION['userID'] || isset($_SESSION['admin']));
 $userName = $accountManager->getUsername($userID);

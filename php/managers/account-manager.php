@@ -132,6 +132,13 @@ class AccountManager{
         $isAdmin = $isAdmin->fetch(PDO::FETCH_ASSOC);
         return (bool)$isAdmin;
     }
+
+    public function exists($userID){
+        $userExists = $this->conn->prepare("SELECT id FROM Users WHERE id = :userID");
+        $userExists->execute([':userID'=>$userID]);
+        $userExists = $userExists->fetch(PDO::FETCH_ASSOC);
+        return (bool)$userExists;
+    }
 }
 
 ?>
