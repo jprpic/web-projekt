@@ -147,10 +147,12 @@ unset($conn);
                                         </form>
                                         <div class="d-flex p-2">
                                             <span style="margin-left:16px;"><?= $comment['comment'];?></span>
+                                            <?php if($isOwner):?>
                                             <form action="" method="post">
                                                 <button type="submit" name=<?php if($isReply){echo "removeReply";}else{echo "removeComment";}?> value=<?= $comment['id'] ?>
                                                 class="btn btn-outline-danger btn-sm" style="margin-left:8px;">delete</button>
                                             </form>
+                                            <?php endif;?>
                                         </div>
                                     </td>
                                 </tr>
