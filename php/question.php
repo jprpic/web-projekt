@@ -54,7 +54,7 @@ if(isset($_POST['editChildComment'])){
     header("Refresh:0");
 }
 
-$questionComments = $commentManager->loadQuestionComments($questionID);
+$questionComments = $commentManager->getQuestionComments($questionID);
 
 require_once('./managers/question-manager.php');
 require_once('./managers/answer-manager.php');
@@ -187,7 +187,7 @@ unset($conn);
                                     <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= $questionComment['id']; ?>>reply</button>
                                 </form>
 
-                                <?php $childComments = $commentManager->loadChildComments($questionComment['id']);
+                                <?php $childComments = $commentManager->getParentsChildComments($questionComment['id']);
                                 foreach ($childComments as &$childComment):?>
                                     <div style="margin-left: 32px;">
                                         <?= $childComment['comment'];?>
@@ -195,7 +195,6 @@ unset($conn);
                                         <?php if($userID == $childComment['userID']):?>
                                                 <button type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= $childComment['id']; ?>>delete</button>
                                                 <button type="submit" class="btn btn-outline-secondary btn-sm" name="editChildComment" value=<?= $childComment['id']; ?>>edit</button>
-                                            
                                         <?php endif;?> 
                                         <input type="hidden" name="replyToUserID" value=<?= $childComment['userID'];?>>
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= $questionComment['id']; ?>>reply</button>

@@ -24,7 +24,7 @@ class CommentManager{
         $questionCommentEntry->execute([':questionID'=>$questionID,':userID'=>$userID,':comment'=>$comment]);
     }
 
-    public function loadQuestionComments($questionID){
+    public function getQuestionComments($questionID){
         $sql = <<<EOSQL
             SELECT * FROM Question_comments WHERE questionID = :questionID ORDER BY creationTime DESC;
         EOSQL;
@@ -56,7 +56,7 @@ class CommentManager{
         $childCommentEntry->execute([':parentID'=>$parentID,':userID'=>$userID,':comment'=>$comment]);
     }
 
-    public function loadChildComments($parentID){
+    public function getParentsChildComments($parentID){
         $sql = <<<EOSQL
             SELECT * FROM Child_comments WHERE parentID = :parentID;
         EOSQL;
@@ -114,7 +114,7 @@ class CommentManager{
         return $cCount['COUNT(*)'] + $qCount['COUNT(*)'];
     }
 
-    public function getQuestionComments($userID){
+    public function getUserQuestionComments($userID){
         $sql = <<<EOSQL
             SELECT * FROM Question_comments WHERE userID = :userID;
         EOSQL;
@@ -127,7 +127,7 @@ class CommentManager{
         return $questionComments;
     }
 
-    public function getChildComments($userID){
+    public function getUserChildComments($userID){
         $sql = <<<EOSQL
             SELECT * FROM Child_comments WHERE userID = :userID;
         EOSQL;

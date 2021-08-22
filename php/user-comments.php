@@ -39,8 +39,8 @@ $questionCount = $questionManager->countQuestions($userID);
 $answerCount = $answerManager->countUserAnswers($userID);
 $commentCount = $commentManager->countComments($userID);
 
-$questionComments = $commentManager->getQuestionComments($userID);
-$childComments = $commentManager->getChildComments($userID);
+$questionComments = $commentManager->getUserQuestionComments($userID);
+$childComments = $commentManager->getUserChildComments($userID);
 
 $comments = array();
 
@@ -68,8 +68,8 @@ foreach($childComments as &$childComment){
 
 
 function date_compare($element1, $element2) {
-    $datetime1 = strtotime($element1['creationTime']);
-    $datetime2 = strtotime($element2['creationTime']);
+    $datetime1 = $element1['creationTime'];
+    $datetime2 = $element2['creationTime'];
     return $datetime2 - $datetime1;
 } 
   
