@@ -101,7 +101,7 @@ unset($conn);
             <div class="d-flex justify-content-end" style="margin:4px;">
                 <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
                 <form action="./user-questions.php" method="get" style="margin:0px 4px;">
-                    <button type="submit" name="userID" value=<?= $_SESSION['userID'];?> class="btn btn-primary text-white">Your profile</button>
+                    <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="btn btn-primary text-white">Your profile</button>
                 </form>
                 <form action="" method="POST">
                     <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
@@ -112,11 +112,11 @@ unset($conn);
         <section class="d-flex justify-content-around">
 
             <div class="d-flex align-items-center">
-                <p style="margin:32px; font-size:32px;"><?= $userName;?></p>
+                <p style="margin:32px; font-size:32px;"><?= htmlspecialchars($userName);?></p>
                 <div>
-                    <?= 'Questions: ' . $questionCount . '</br>' ?>
-                    <?= 'Answers: ' . $answerCount . '</br>' ?>
-                    <?= 'Comments: ' . $commentCount . '</br>' ?>
+                    <?= 'Questions: ' . htmlspecialchars($questionCount) . '</br>' ?>
+                    <?= 'Answers: ' . htmlspecialchars($answerCount) . '</br>' ?>
+                    <?= 'Comments: ' . htmlspecialchars($commentCount) . '</br>' ?>
                 </div>
             </div>
 
@@ -124,37 +124,42 @@ unset($conn);
 
                 <div class="d-flex justify-content-center" style="margin:8px;">
                     <form action="./user-questions.php" method="get" style="margin:4px;">
-                        <button type="submit" name="userID" value=<?= $userID;?> class="btn btn-primary text-white">Questions</button>
+                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="btn btn-primary text-white">Questions</button>
                     </form>
                     <form action="./user-answers.php" method="get" style="margin:4px;">
-                        <button type="submit" name="userID" value=<?= $userID;?> class="btn btn-primary text-white">Answers</button>
+                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="btn btn-primary text-white">Answers</button>
                     </form>
                     <form action="./user-comments.php" method="get" style="margin:4px;">
-                        <button type="submit" name="userID" value=<?= $userID;?> class="btn btn-primary text-white">Comments</button>
+                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="btn btn-primary text-white">Comments</button>
                     </form>
                 </div>
 
                 <div style="margin:0px 12px;">
                     <div class="text-center" style="font-size:32px;">Comments</div>
                     <table class="table table-striped text-center">
+                        <thead>
+
+                        </thead>
                         <tbody class="text-left">
                             <?php foreach($comments as &$comment):?>
                                 <?php $isReply = $comment['type']==$commentManager::TYPE_REPLY;?>
                                 <tr>
                                     <td>
                                         <form action="./question.php" method="get">
-                                            <button type="submit" name="questionID" value=<?= $comment['questionID'];?> class="btn btn-danger text-white btn-sm"><?= $questionManager->getQuestion($comment['questionID']) ?></button>
+                                            <button type="submit" name="questionID" value=<?= htmlspecialchars($comment['questionID']);?> class="btn btn-danger text-white btn-sm"><?=  htmlspecialchars($questionManager->getQuestion($comment['questionID'])) ?></button>
                                         </form>
                                         <div class="d-flex p-2">
-                                            <span style="margin-left:16px;"><?= $comment['comment'];?></span>
-                                            <?php if($isOwner):?>
-                                            <form action="" method="post">
-                                                <button type="submit" name=<?php if($isReply){echo "removeReply";}else{echo "removeComment";}?> value=<?= $comment['id'] ?>
-                                                class="btn btn-outline-danger btn-sm" style="margin-left:8px;">delete</button>
-                                            </form>
-                                            <?php endif;?>
+                                            <span style="margin-left:16px;"><?=  htmlspecialchars($comment['comment']);?></span>    
                                         </div>
                                     </td>
+                                    <?php if($isOwner):?>
+                                        <td >
+                                        <form action="" method="post"  >
+                                            <button type="submit" name=<?php if($isReply){echo "removeReply";}else{echo "removeComment";}?> value=<?= htmlspecialchars($comment['id']) ?>
+                                            class="btn btn-outline-danger btn-sm">x</button>
+                                        </form>
+                                        </td>
+                                    <?php endif;?>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

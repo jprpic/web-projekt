@@ -54,7 +54,6 @@ if(isset($_POST['removeChildComment'])){
 if(isset($_POST['replyComment'])){
     $comment = "This is a reply!";
     if(isset($_POST['replyToUserID'])){
-        echo $_POST['replyToUserID'];
         $comment = '@' . $accountManager->getUsername($_POST['replyToUserID']) . ' ' . $comment;
     }
     $commentManager->replyToComment($userID,$_POST['replyComment'],$comment);
@@ -126,7 +125,7 @@ unset($conn);
         <div class="d-flex justify-content-end" style="margin:4px;">
             <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
             <form action="./user-questions.php" method="get" style="margin:0px 4px;">
-                <button type="submit" name="userID" value=<?= $_SESSION['userID'];?> class="btn btn-primary text-white">Your profile</button>
+                <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="btn btn-primary text-white">Your profile</button>
             </form>
             <form action="" method="POST">
                 <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
@@ -137,33 +136,33 @@ unset($conn);
     <div class="text-center" style="padding: 64px;font-size: 32px;">
         <?= htmlspecialchars($question); ?>
         <?php if($userAnswer):?>
-            <p>You voted <span class=<?php if($userAnswer=="no"){echo "text-danger";}else{echo "text-success";}?>><?= $userAnswer; ?></span></p>
+            <p>You voted <span class=<?php if($userAnswer=="no"){echo "text-danger";}else{echo "text-success";}?>><?= htmlspecialchars($userAnswer); ?></span></p>
         <?php endif;?>
     </div>
     <div class="d-flex justify-content-center">
         <form action="./question.php" method="get">
             <button type="submit" name="questionID" class="btn btn-info btn-sm" <?php
-            $previousQuestionID = $questionManager->getPreviousQuestion($userID,$questionID);
+            $previousQuestionID = htmlspecialchars($questionManager->getPreviousQuestion($userID,$questionID));
             if($previousQuestionID){echo "value=$previousQuestionID";}
             else{echo "disabled";} ?>>previous</button>
         </form>
         <form action="" method="post">
-                <button type="submit" name="noanswer" style="margin:0px 8px;"value=<?= $questionID?> class="btn btn-danger text-white"
+                <button type="submit" name="noanswer" style="margin:0px 8px;"value=<?= htmlspecialchars($questionID);?> class="btn btn-danger text-white"
                 <?php if($userAnswer=="no" || $isQuestionOwner){echo "disabled";}?>>No</button>
         </form>
         <div class="text-left bg-danger text-white" style="padding: 64px;font-size: 32px;margin:32px;">
-            <?= $answerCount['no']; ?>
+            <?= htmlspecialchars($answerCount['no']); ?>
         </div>
         <div class="text-right bg-success text-white" style="padding: 64px;font-size: 32px;margin:32px;">
-            <?= $answerCount['yes']; ?>
+            <?= htmlspecialchars($answerCount['yes']); ?>
         </div>
         <form action="" method="post">
-            <button type="submit" name="yesanswer" value=<?= $questionID?> class="btn btn-success text-white"
+            <button type="submit" name="yesanswer" value=<?= htmlspecialchars($questionID); ?> class="btn btn-success text-white"
             <?php if($userAnswer=="yes" || $isQuestionOwner){echo "disabled";}?>>Yes</button>
         </form>
         <form action="./question.php" method="get">
             <button type="submit" name="questionID"  style="margin:0px 8px;" class="btn btn-info btn-sm"<?php
-            $nextQuestionID = $questionManager->getNextQuestion($userID,$questionID);
+            $nextQuestionID = htmlspecialchars($questionManager->getNextQuestion($userID,$questionID));
             if($nextQuestionID){echo "value=$nextQuestionID";}
             else{echo "disabled";} ?>>next</button>
         </form>
@@ -172,11 +171,11 @@ unset($conn);
     <section class="bg-light text-right d-flex justify-content-end" style="margin:0px 8px 0px 0px;">
         <form action="./user-questions.php" method="get">
             <div style="display: inline;">Question from: </div>
-            <button type="submit" class="btn btn-info text-white btn-sm" style="margin:4px;" name="userID" value=<?= $questionOwnerID; ?>><?= $questionOwner; ?></button>
+            <button type="submit" class="btn btn-info text-white btn-sm" style="margin:4px;" name="userID" value=<?= htmlspecialchars($questionOwnerID); ?>><?= htmlspecialchars($questionOwner); ?></button>
         </form>
         <?php if($isQuestionOwner || $isAdmin):?>
             <form action="" method="post">
-                <button type="submit" class="btn btn-outline-danger btn-sm" style="margin:4px;" name="removeQuestion" value=<?= $questionID; ?>>delete</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm" style="margin:4px;" name="removeQuestion" value=<?= htmlspecialchars($questionID); ?>>delete</button>
             </form>
         <?php endif;?>
     </section>
@@ -197,32 +196,32 @@ unset($conn);
                         <tr>
                             <td>
                                 <form action="./user-questions.php" method="get">
-                                    <button type="submit" class="btn btn-info text-white btn-sm" name="userID" value=<?= $questionComment['userID']; ?>><?= $accountManager->getUsername($questionComment['userID']); ?></button>
+                                    <button type="submit" class="btn btn-info text-white btn-sm" name="userID" value=<?= htmlspecialchars($questionComment['userID']); ?>><?= htmlspecialchars($accountManager->getUsername($questionComment['userID'])); ?></button>
                                 </form>
 
-                                <p><?= $questionComment['comment']; ?></p>
+                                <p><?= htmlspecialchars($questionComment['comment']); ?></p>
                                 <form action="" method="post" style="margin:-16px 0px 0px 0px;">
                                 <?php if($userID == $questionComment['userID'] || $isAdmin):?>
 
-                                        <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= $questionComment['id']; ?>>delete</button>
-                                        <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= $questionComment['id']; ?>>edit</button>
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>delete</button>
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>edit</button>
                                 <?php endif;?>
-                                    <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= $questionComment['id']; ?>>reply</button>
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
                                 </form>
 
                                 <?php $childComments = $commentManager->getParentsChildComments($questionComment['id']);
                                 foreach ($childComments as &$childComment):?>
                                     <div style="margin-left: 32px;">
-                                        <?= $childComment['comment'];?>
+                                        <?= htmlspecialchars($childComment['comment']);?>
                                         <form action="" method="post">
                                         <?php if($userID == $childComment['userID'] || $isAdmin):?>
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= $childComment['id']; ?>>delete</button>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= htmlspecialchars($childComment['id']); ?>>delete</button>
                                         <?php endif;?> 
                                         <?php if($userID == $childComment['userID']):?>
-                                                <button type="submit" class="btn btn-outline-secondary btn-sm" name="editChildComment" value=<?= $childComment['id']; ?>>edit</button>
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm" name="editChildComment" value=<?= htmlspecialchars($childComment['id']); ?>>edit</button>
                                         <?php endif;?> 
-                                        <input type="hidden" name="replyToUserID" value=<?= $childComment['userID'];?>>
-                                        <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= $questionComment['id']; ?>>reply</button>
+                                        <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($childComment['userID']);?>>
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
                                         </form>
                                     </div>
                                 <?php endforeach; ?>
