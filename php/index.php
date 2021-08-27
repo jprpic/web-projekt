@@ -65,7 +65,7 @@ unset($conn);
         <div class="d-flex justify-content-end" style="margin:4px;">
             <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
             <form action="./user-questions.php" method="get" style="margin:0px 4px;">
-                <button type="submit" name="userID" value=<?= $_SESSION['userID'];?> class="btn btn-primary text-white">Your profile</button>
+                <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="btn btn-primary text-white">Your profile</button>
             </form>
             <form action="" method="POST">
                 <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
@@ -88,18 +88,18 @@ unset($conn);
                 <tr>
                     <td>
                         <form action="question.php" method="get">
-                            <button type="submit" name="questionID" value=<?= $question['id'] ?> class="btn btn-danger text-white"><?= htmlspecialchars($questionManager->getQuestion($question['id'])) ?></button>
+                            <button type="submit" name="questionID" value=<?= htmlspecialchars($question['id']); ?> class="btn btn-danger text-white"><?= htmlspecialchars($questionManager->getQuestion($question['id'])) ?></button>
                         </form>
                     </td>
                     <?php $isQuestionOwner = $questionManager->getOwner($question['id']) == $userID?>
                     <td>
                         <form action="" method="POST">
-                            <button type="submit" name="yesanswer" value=<?=$question['id']?> <?php if($isQuestionOwner || $questionAnswer=="yes"){echo "disabled";}?> class="btn btn-primary text-white">Yes</button>
+                            <button type="submit" name="yesanswer" value=<?= htmlspecialchars($question['id']); ?> <?php if($isQuestionOwner || $questionAnswer=="yes"){echo "disabled";}?> class="btn btn-primary text-white">Yes</button>
                         </form>
                     </td>
                     <td>
                         <form action="" method="POST">
-                            <button type="submit" name="noanswer" value=<?=$question['id']?> <?php if($isQuestionOwner || $questionAnswer=="no"){echo "disabled";}?> class="btn btn-danger text-white">No</button>
+                            <button type="submit" name="noanswer" value=<?= htmlspecialchars($question['id']); ?> <?php if($isQuestionOwner || $questionAnswer=="no"){echo "disabled";}?> class="btn btn-danger text-white">No</button>
                         </form>
                     </td>
                 </tr>

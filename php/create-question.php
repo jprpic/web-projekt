@@ -43,7 +43,7 @@ if(isset($_POST['submit'])){
             <div class="d-flex justify-content-end" style="margin:4px;">
                 <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
                 <form action="./user-questions.php" method="get" style="margin:0px 4px;">
-                    <button type="submit" name="userID" value=<?= $_SESSION['userID'];?> class="btn btn-primary text-white">Your profile</button>
+                    <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="btn btn-primary text-white">Your profile</button>
                 </form>
                 <form action="" method="POST">
                     <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
@@ -56,7 +56,7 @@ if(isset($_POST['submit'])){
             <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
                 <label for="email">Question:</label></br>
                 <textarea id="question" name="question" rows="3" cols="100" style="padding:4px 0px 0px 8px;"></textarea>
-                <div class="text-danger"> <?= $error ?> </div>
+                <div class="text-danger"> <?= htmlspecialchars($error) ?> </div>
 
                 <input type="submit" id="submit" name="submit" value ="Submit" class="btn btn-primary text-white" style="margin-top:20px;"></br>
             </form>
