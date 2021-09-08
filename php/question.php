@@ -52,7 +52,7 @@ if(isset($_POST['removeChildComment'])){
 }
 
 if(isset($_POST['replyComment'])){
-    $comment = "This is a reply!";
+    $comment =  $_POST['replyToUser'];
     if(isset($_POST['replyToUserID'])){
         $comment = '@' . $accountManager->getUsername($_POST['replyToUserID']) . ' ' . $comment;
     }
@@ -180,10 +180,11 @@ unset($conn);
         <?php endif;?>
     </section>
 
+    <!--  KOMENTAR -->
     <section class="d-flex p-2 text-left bg-light">
         <form method="POST" action="">
             <label for="email">Comment:</label></br>
-            <textarea id="commentText" name="commentText" rows="2" cols="100" style="padding:4px 0px 0px 8px;"></textarea>
+            <textarea id="commentText" name="commentText" rows="2" cols="100"  style="padding:4px 0px 0px 8px;   "></textarea>
             <input type="submit" id="commentSubmit" name="commentSubmit" value ="Submit" class="btn btn-primary text-white" style="margin-top:20px;"></br>
         </form>
     </section>
@@ -206,12 +207,18 @@ unset($conn);
                                         <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>delete</button>
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>edit</button>
                                 <?php endif;?>
+                                <input  name="replyToUser"  placeholder="comment" >
+                                <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($questionComment['userID']);?>>
                                     <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
                                 </form>
 
                                 <?php $childComments = $commentManager->getParentsChildComments($questionComment['id']);
                                 foreach ($childComments as &$childComment):?>
-                                    <div style="margin-left: 32px;">
+                                 
+                                 <div style="margin-left: 32px; border: 2px solid white;">
+                                 <form action="./user-questions.php" method="get">
+                                    <button style="margin-top: 12px;" type="submit" class="btn btn-info text-white btn-sm" name="userID" value=<?= htmlspecialchars($questionComment['userID']); ?>><?= htmlspecialchars($accountManager->getUsername($childComment['userID'])); ?></button>
+                                 </form>   
                                         <?= htmlspecialchars($childComment['comment']);?>
                                         <form action="" method="post">
                                         <?php if($userID == $childComment['userID'] || $isAdmin):?>
@@ -221,8 +228,10 @@ unset($conn);
                                                 <button type="submit" class="btn btn-outline-secondary btn-sm" name="editChildComment" value=<?= htmlspecialchars($childComment['id']); ?>>edit</button>
                                         <?php endif;?> 
                                         <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($childComment['userID']);?>>
+                                        <input  name="replyToUser"  placeholder="comment" >
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
                                         </form>
+                                         
                                     </div>
                                 <?php endforeach; ?>
                             </td>
