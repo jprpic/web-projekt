@@ -59,7 +59,9 @@ if(isset($_POST['replyComment'])){
     $commentManager->replyToComment($userID,$_POST['replyComment'],$comment);
 }
 
+
 if(isset($_POST['editQuestionComment'])){
+
     $commentManager->editComment($_POST['editQuestionComment'],$commentManager::TYPE_COMMENT);
     header("Refresh:0");
 }
@@ -116,24 +118,45 @@ unset($conn);
 
 <head>
     <title><?= htmlspecialchars($question); ?></title>
+    <link rel="stylesheet" href="styles.css">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
-<body>
-    <section class="d-flex justify-content-between bg-light text-right">
-        <a href="./index.php"><button class="btn btn-primary text-white" style="margin:4px;">Home</button></a>
-        <div class="d-flex justify-content-end" style="margin:4px;">
-            <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
-            <form action="./user-questions.php" method="get" style="margin:0px 4px;">
-                <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="btn btn-primary text-white">Your profile</button>
+<div class="header">
+  <h1 class="logo">AskMe</h1>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle">
+  <nav class="nav">
+    <ul>
+      <li>  
+            <form action="./index.php" method="get" >
+                <button type="submit" name="userID"  class="button_slide slide_left"><span class="text">Home</span></button>
             </form>
-            <form action="" method="POST">
-                <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
+        </li>
+      <li>  
+            <form action="./create-question.php" method="get" >
+                <button type="submit" name="userID"  class="button_slide slide_left"><span class="text">Create a Question</span></button>
             </form>
-        </div>
-    </section>
+        </li>
+      <li>  
+            <form action="./user-questions.php" method="get" >
+                <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="button_slide slide_left"><span class="text">your profile</span></button>
+            </form>
+        </li>
+      <li><form action="" method="POST">
+         <button type="submit" name="logout" value="Log Out" class="button_slide slide_left logout"><span class="text">Log out</span></button>
+              
+            </form></li>
+    </ul>
+  </nav>
+  <label for="nav-toggle" class="nav-toggle-label">
+    <span></span>
+  </label>
+</div>
 
-    <div class="text-center" style="padding: 64px;font-size: 32px;">
+<body>
+
+    <div class="text-center" style="padding: 100px;font-size: 32px;">
         <?= htmlspecialchars($question); ?>
         <?php if($userAnswer):?>
             <p>You voted <span class=<?php if($userAnswer=="no"){echo "text-danger";}else{echo "text-success";}?>><?= htmlspecialchars($userAnswer); ?></span></p>
@@ -181,11 +204,14 @@ unset($conn);
     </section>
 
     <!--  KOMENTAR -->
-    <section class="d-flex p-2 text-left bg-light">
+    <section class=" p-2 text-left bg-light">
         <form method="POST" action="">
-            <label for="email">Comment:</label></br>
-            <textarea id="commentText" name="commentText" rows="2" cols="100"  style="padding:4px 0px 0px 8px;   "></textarea>
-            <input type="submit" id="commentSubmit" name="commentSubmit" value ="Submit" class="btn btn-primary text-white" style="margin-top:20px;"></br>
+            <label for="email">Enter your comment here:</label></br>
+            <div class="commentbox" style="max-width: 600px; margin: 0px ; ">
+
+                <textarea id="commentText" name="commentText" rows="2"    style="width:100%;   "></textarea>
+            </div>
+            <input type="submit" id="commentSubmit" name="commentSubmit" value ="Submit" class="btn btn-primary text-white" style="margin-top:20px; "></br>
         </form>
     </section>
 
@@ -203,11 +229,11 @@ unset($conn);
                                 <p><?= htmlspecialchars($questionComment['comment']); ?></p>
                                 <form action="" method="post" style="margin:-16px 0px 0px 0px;">
                                 <?php if($userID == $questionComment['userID'] || $isAdmin):?>
-
+                                   
                                         <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>delete</button>
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>edit</button>
                                 <?php endif;?>
-                                <input  name="replyToUser"  placeholder="comment" >
+                                <input style="margin-left: 15px; "  name="replyToUser"  placeholder="comment" >
                                 <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($questionComment['userID']);?>>
                                     <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
                                 </form>
@@ -228,7 +254,7 @@ unset($conn);
                                                 <button type="submit" class="btn btn-outline-secondary btn-sm" name="editChildComment" value=<?= htmlspecialchars($childComment['id']); ?>>edit</button>
                                         <?php endif;?> 
                                         <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($childComment['userID']);?>>
-                                        <input  name="replyToUser"  placeholder="comment" >
+                                        <input style="margin-left: 15px; " name="replyToUser"  placeholder="comment" >
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
                                         </form>
                                          
