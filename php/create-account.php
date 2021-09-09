@@ -9,6 +9,10 @@ $username = $email = $password = $confirmPassword = '';
 
 $errors = array('username'=>'','email'=>'','password'=>'','confirmPassword'=>'');
 
+if(isset($_POST['backtolog'])){
+    header("Location:./login.php");
+}
+
 if(isset($_POST['create'])){
     require_once('./managers/account-manager.php');
     require_once('./dbconfig.php');
@@ -42,10 +46,15 @@ if(isset($_POST['create'])){
 
 <head>
 <title>Create an account</title>
+<link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
+
+<div class="headerlogin">
+    <h1>AskMe?</h1>
+</div>
 <section class="container text-center bg-light">
         <h4 class="title">Create an account</h4>
         <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
@@ -66,7 +75,10 @@ if(isset($_POST['create'])){
             <div class="text-danger"><?php echo $errors['confirmPassword'];?></div>
 
             <div class="center" style="margin:10px;">
-                <input type="submit" name="create" value="Create" class="btn btn-primary text-white">
+                <input type="submit" name="create" value="Create" class="button_slide slide_left">
+            </div>
+            <div>
+                <input type="submit" name="backtolog" value="Back to login" class="button_slide slide_left logout">
             </div>
         </form>
     </section>

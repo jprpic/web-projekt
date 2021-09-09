@@ -124,7 +124,7 @@ unset($conn);
 </head>
 
 <div class="header">
-  <h1 class="logo">AskMe</h1>
+  <h1 class="logo">AskMe?</h1>
   <input type="checkbox" id="nav-toggle" class="nav-toggle">
   <nav class="nav">
     <ul>
@@ -206,12 +206,13 @@ unset($conn);
     <!--  KOMENTAR -->
     <section class=" p-2 text-left bg-light">
         <form method="POST" action="">
-            <label for="email">Enter your comment here:</label></br>
-            <div class="commentbox" style="max-width: 600px; margin: 0px ; ">
+            <div style="text-align: center;" ><label  for="email">Enter your comment here:</label></div>
+        </br>
+            <div class="commentbox" style="max-width: 600px; margin: 0px auto; ">
 
                 <textarea id="commentText" name="commentText" rows="2"    style="width:100%;   "></textarea>
             </div>
-            <input type="submit" id="commentSubmit" name="commentSubmit" value ="Submit" class="btn btn-primary text-white" style="margin-top:20px; "></br>
+           <div style="text-align: center;" > <input type="submit" id="commentSubmit" name="commentSubmit" value ="Submit" class="button_slide slide_left" style="margin-top:20px; "> </div></br>
         </form>
     </section>
 
@@ -227,35 +228,45 @@ unset($conn);
                                 </form>
 
                                 <p><?= htmlspecialchars($questionComment['comment']); ?></p>
+                                
                                 <form action="" method="post" style="margin:-16px 0px 0px 0px;">
+                                <div style="padding-top:10px;"></div>
                                 <?php if($userID == $questionComment['userID'] || $isAdmin):?>
                                    
                                         <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>delete</button>
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>edit</button>
                                 <?php endif;?>
-                                <input style="margin-left: 15px; "  name="replyToUser"  placeholder="comment" >
+                                
                                 <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($questionComment['userID']);?>>
                                     <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
+                                    <div class="commentbox" style="max-width: 600px; margin: 5px; ">
+                                            <textarea style=" width:100%; " rows="1"  name="replyToUser"  placeholder="Write your reply here." ></textarea>
+                                        </div>
                                 </form>
 
                                 <?php $childComments = $commentManager->getParentsChildComments($questionComment['id']);
                                 foreach ($childComments as &$childComment):?>
                                  
-                                 <div style="margin-left: 32px; border: 2px solid white;">
+                                 <div style="margin-left: 32px; padding-bottom: 10px; padding-left: 10px; border-bottom: 2px solid rgb(230, 230, 230); border-left: 2px solid rgb(230, 230, 230);">
                                  <form action="./user-questions.php" method="get">
                                     <button style="margin-top: 12px;" type="submit" class="btn btn-info text-white btn-sm" name="userID" value=<?= htmlspecialchars($questionComment['userID']); ?>><?= htmlspecialchars($accountManager->getUsername($childComment['userID'])); ?></button>
                                  </form>   
                                         <?= htmlspecialchars($childComment['comment']);?>
+                                        <div style="margin-top:10px;"></div>
+                                
                                         <form action="" method="post">
                                         <?php if($userID == $childComment['userID'] || $isAdmin):?>
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= htmlspecialchars($childComment['id']); ?>>delete</button>
+                                            <button  type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= htmlspecialchars($childComment['id']); ?>>delete</button>
                                         <?php endif;?> 
                                         <?php if($userID == $childComment['userID']):?>
                                                 <button type="submit" class="btn btn-outline-secondary btn-sm" name="editChildComment" value=<?= htmlspecialchars($childComment['id']); ?>>edit</button>
                                         <?php endif;?> 
-                                        <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($childComment['userID']);?>>
-                                        <input style="margin-left: 15px; " name="replyToUser"  placeholder="comment" >
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
+                                        <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($childComment['userID']);?>>
+                                        <div class="commentbox" style="max-width: 600px; margin: 5px; ">
+                                            <textarea style=" width:100%; " rows="1"  name="replyToUser"  placeholder="Write your reply here." ></textarea>
+                                        </div>
+                                        
                                         </form>
                                          
                                     </div>

@@ -63,7 +63,7 @@ unset($conn);
 </head>
 
 <div class="header">
-  <h1 class="logo">AskMe</h1>
+  <h1 class="logo">AskMe?</h1>
   <input type="checkbox" id="nav-toggle" class="nav-toggle">
   <nav class="nav">
     <ul>
@@ -137,7 +137,7 @@ unset($conn);
                     <?php $isQuestionOwner = $questionManager->getOwner($question['id']) == $userID?>
                     <td>
                         <form action="" method="POST">
-                            <button type="submit" name="yesanswer" value=<?= htmlspecialchars($question['id']); ?> <?php if($isQuestionOwner || $questionAnswer=="yes"){echo "disabled";}?> class="btn btn-primary text-white">Yes</button>
+                            <button type="submit" name="yesanswer" value=<?= htmlspecialchars($question['id']); ?> <?php if($isQuestionOwner || $questionAnswer=="yes"){echo "disabled" ;}?> class="btn btn-primary text-white">Yes</button>
                         </form>
                     </td>
                     <td>

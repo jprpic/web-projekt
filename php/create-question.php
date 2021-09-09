@@ -39,7 +39,7 @@ if(isset($_POST['submit'])){
     </head>
 
     <div class="header">
-  <h1 class="logo">AskMe</h1>
+  <h1 class="logo">AskMe?</h1>
   <input type="checkbox" id="nav-toggle" class="nav-toggle">
   <nav class="nav">
     <ul>
@@ -72,7 +72,7 @@ if(isset($_POST['submit'])){
     <body>
        
 
-        <section style= "padding-top:100px;" class="container text-center bg-light">
+        <section style= "padding-top:200px;" class="container text-center bg-light">
             <h4 class="title">Create a Question</h4>
             <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
                 <label for="email">Question:</label></br>
@@ -81,7 +81,7 @@ if(isset($_POST['submit'])){
                 </div>
                 <div class="text-danger"> <?= htmlspecialchars($error) ?> </div>
 
-                <input type="submit" id="submit" name="submit" value ="Submit" class="btn btn-primary text-white" style="margin-top:20px;"></br>
+                <input type="submit" id="submit" name="submit" value ="Submit" class="button_slide slide_left" style="margin-top:20px;"></br>
             </form>
         </section>
 

@@ -54,10 +54,15 @@ if(isset($_POST['submit'])){
 
 <head>
 <title>Log in</title>
+<link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
+
+<div class="headerlogin">
+    <h1>AskMe?</h1>
+</div>
 <section class="container text-center bg-light">
         <h4 class="title">Log-in</h4>
         <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
@@ -70,10 +75,10 @@ if(isset($_POST['submit'])){
             <div class="text-danger"><?php echo $errors['password'];?></div>
 
             <div class="center" style="margin:10px;">
-                <input type="submit" name="submit" value="Submit" class="btn btn-primary text-white">
+                <input type="submit" name="submit" value="Submit" class="button_slide slide_left">
             </div>
             <div>
-                <input type="submit" name="create" value="Create a new account">
+                <input type="submit" name="create" value="Create a new account" class="button_slide slide_left logout">
             </div>
         </form>
     </section>

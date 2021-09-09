@@ -59,7 +59,7 @@ unset($conn);
     </head>
 
     <div class="header">
-  <h1 class="logo">AskMe</h1>
+  <h1 class="logo">AskMe?</h1>
   <input type="checkbox" id="nav-toggle" class="nav-toggle">
   <nav class="nav">
     <ul>
@@ -106,13 +106,13 @@ unset($conn);
 
                 <div class="d-flex justify-content-center" style="margin:8px;">
                     <form action="./user-questions.php" method="get" style="margin:4px;">
-                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="btn btn-primary text-white">Questions</button>
+                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="button_slide slide_left active1">Questions</button>
                     </form>
                     <form action="./user-answers.php" method="get" style="margin:4px;">
-                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="btn btn-primary text-white">Answers</button>
+                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="button_slide slide_left">Answers</button>
                     </form>
                     <form action="./user-comments.php" method="get" style="margin:4px;">
-                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="btn btn-primary text-white">Comments</button>
+                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="button_slide slide_left">Comments</button>
                     </form>
                 </div>
 

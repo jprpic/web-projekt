@@ -6,6 +6,17 @@
   box-sizing: border-box;
 }
 
+.headerlogin{
+  font-family: 'Work Sans', sans-serif;
+  text-align: center;
+}
+
+.headerlogin h1 {
+  font-size: 6.0em;
+  font-weight: bolder;
+  background-image: linear-gradient(260deg, #ffffff 0%, #d4d4d4 100%);
+}
+
 .button_slide {
   color: rgb(27, 27, 231) ;
   border: 2px solid rgb(27, 27, 231);
@@ -44,6 +55,7 @@
 .active1 {
   box-shadow: inset 0 0 0 50px rgba(30, 30, 218, 0.596);
   color: white;
+  
 }
 
 
