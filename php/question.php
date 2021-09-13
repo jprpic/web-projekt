@@ -77,6 +77,8 @@ $questionComments = $commentManager->getQuestionComments($questionID);
 $questionOwnerID = $questionManager->getOwner($questionID); 
 $questionOwner = $accountManager->getUsername($questionOwnerID);
 
+$userName = $accountManager->getUsername($userID);
+
 
 $userAnswer = $answerManager->getUserAnswer($questionID,$userID);
 $isQuestionOwner = $questionOwnerID == $userID;
@@ -152,44 +154,52 @@ unset($conn);
   <label for="nav-toggle" class="nav-toggle-label">
     <span></span>
   </label>
+  <p class="username">Hi, <?= htmlspecialchars($userName);?>!</p>
 </div>
 
 <body>
 
-    <div class="text-center" style="padding: 100px;font-size: 32px;">
+    <div class="text-center" style="padding: 100px 100px 40px 100px; font-size: 1.3em;">
         <?= htmlspecialchars($question); ?>
         <?php if($userAnswer):?>
-            <p>You voted <span class=<?php if($userAnswer=="no"){echo "text-danger";}else{echo "text-success";}?>><?= htmlspecialchars($userAnswer); ?></span></p>
+            <p style="background-color:#E6E6E6;">You voted <span class=<?php if($userAnswer=="no"){echo "text-danger";}else{echo "text-success";}?>><?= htmlspecialchars($userAnswer); ?></span></p>
         <?php endif;?>
     </div>
     <div class="d-flex justify-content-center">
-        <form action="./question.php" method="get">
-            <button type="submit" name="questionID" class="btn btn-info btn-sm" <?php
-            $previousQuestionID = htmlspecialchars($questionManager->getPreviousQuestion($userID,$questionID));
-            if($previousQuestionID){echo "value=$previousQuestionID";}
-            else{echo "disabled";} ?>>previous</button>
-        </form>
-        <form action="" method="post">
-                <button type="submit" name="noanswer" style="margin:0px 8px;"value=<?= htmlspecialchars($questionID);?> class="btn btn-danger text-white"
-                <?php if($userAnswer=="no" || $isQuestionOwner){echo "disabled";}?>>No</button>
-        </form>
         <div class="text-left bg-danger text-white" style="padding: 64px;font-size: 32px;margin:32px;">
             <?= htmlspecialchars($answerCount['no']); ?>
         </div>
         <div class="text-right bg-success text-white" style="padding: 64px;font-size: 32px;margin:32px;">
             <?= htmlspecialchars($answerCount['yes']); ?>
         </div>
+    </div>
+
+
+    <div class="d-flex justify-content-center" style="padding-bottom:50px;">
+        <form action="./question.php" method="get">
+            <button type="submit" name="questionID" style="margin:0px 16px;" class="btn btn-info btn-sm" <?php
+            $previousQuestionID = htmlspecialchars($questionManager->getPreviousQuestion($userID,$questionID));
+            if($previousQuestionID){echo "value=$previousQuestionID";}
+            else{echo "disabled";} ?>><<</button>
+        </form>
         <form action="" method="post">
-            <button type="submit" name="yesanswer" value=<?= htmlspecialchars($questionID); ?> class="btn btn-success text-white"
+                <button type="submit" name="noanswer" style="margin:0px 16px;"value=<?= htmlspecialchars($questionID);?> class="answer1 red"
+                <?php if($userAnswer=="no" || $isQuestionOwner){echo "disabled";}?>>No</button>
+        </form>
+       
+        <form action="" method="post">
+            <button type="submit" name="yesanswer" style="margin:0px 16px;"value=<?= htmlspecialchars($questionID); ?> class="answer1"
             <?php if($userAnswer=="yes" || $isQuestionOwner){echo "disabled";}?>>Yes</button>
         </form>
         <form action="./question.php" method="get">
-            <button type="submit" name="questionID"  style="margin:0px 8px;" class="btn btn-info btn-sm"<?php
+            <button type="submit" name="questionID"  style="margin:0px 16px;" class="btn btn-info btn-sm"<?php
             $nextQuestionID = htmlspecialchars($questionManager->getNextQuestion($userID,$questionID));
             if($nextQuestionID){echo "value=$nextQuestionID";}
-            else{echo "disabled";} ?>>next</button>
+            else{echo "disabled";} ?>>>></button>
         </form>
     </div>
+  
+
 
     <section class="bg-light text-right d-flex justify-content-end" style="margin:0px 8px 0px 0px;">
         <form action="./user-questions.php" method="get">

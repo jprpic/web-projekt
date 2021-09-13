@@ -14,10 +14,13 @@ if(isset($_POST['logout'])){
 
 require_once('./dbconfig.php');
 require_once('./managers/answer-manager.php');
+require_once('./managers/account-manager.php');
 
 $conn = DBConfig::getConnection();
 $answerManager = new AnswerManager($conn);
+$accountManager = new AccountManager($conn);
 $userID = $_SESSION['userID'];
+$userName = $accountManager->getUsername($userID);
 
 if(isset($_POST['yesanswer'])){
     $questionID = $_POST['yesanswer'];
@@ -91,7 +94,10 @@ unset($conn);
   <label for="nav-toggle" class="nav-toggle-label">
     <span></span>
   </label>
+  <p class="username">Hi, <?= htmlspecialchars($userName);?>!</p>
 </div>
+
+
 
 
 <body >
@@ -131,18 +137,18 @@ unset($conn);
                 <tr>
                     <td>
                         <form action="question.php" method="get">
-                            <button type="submit" name="questionID" value=<?= htmlspecialchars($question['id']); ?> class="btn btn-danger text-white"><?= htmlspecialchars($questionManager->getQuestion($question['id'])) ?></button>
+                            <button type="submit" name="questionID" value=<?= htmlspecialchars($question['id']); ?> class="buttonQuestion"><p class="question1"><?= htmlspecialchars($questionManager->getQuestion($question['id'])) ?></p></button>
                         </form>
                     </td>
                     <?php $isQuestionOwner = $questionManager->getOwner($question['id']) == $userID?>
                     <td>
                         <form action="" method="POST">
-                            <button type="submit" name="yesanswer" value=<?= htmlspecialchars($question['id']); ?> <?php if($isQuestionOwner || $questionAnswer=="yes"){echo "disabled" ;}?> class="btn btn-primary text-white">Yes</button>
+                            <button type="submit" name="yesanswer" value=<?= htmlspecialchars($question['id']); ?> <?php if($isQuestionOwner || $questionAnswer=="yes"){echo "disabled" ;}?> class="answer1">Yes</button>
                         </form>
                     </td>
                     <td>
                         <form action="" method="POST">
-                            <button type="submit" name="noanswer" value=<?= htmlspecialchars($question['id']); ?> <?php if($isQuestionOwner || $questionAnswer=="no"){echo "disabled";}?> class="btn btn-danger text-white">No</button>
+                            <button type="submit" name="noanswer" value=<?= htmlspecialchars($question['id']); ?> <?php if($isQuestionOwner || $questionAnswer=="no"){echo "disabled";}?> class="answer1 red">No</button>
                         </form>
                     </td>
                 </tr>

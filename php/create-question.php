@@ -14,6 +14,16 @@ if(isset($_POST['logout'])){
 
 $error='';
 
+require_once('./dbconfig.php');
+require_once('./managers/account-manager.php');
+$conn = DBConfig::getConnection();
+$accountManager = new AccountManager($conn);
+$userI = $_SESSION['userID'];
+
+$userName = $accountManager->getUsername($userI);
+
+unset($conn);
+
 if(isset($_POST['submit'])){
     require_once('./managers/question-manager.php');
     require_once('./dbconfig.php');
@@ -25,6 +35,7 @@ if(isset($_POST['submit'])){
         $questionManager->saveQuestion($question,$_SESSION['userID']);
         header('location:index.php');
     }
+    
 }
 ?>
 
@@ -67,12 +78,13 @@ if(isset($_POST['submit'])){
   <label for="nav-toggle" class="nav-toggle-label">
     <span></span>
   </label>
+  <p class="username">Hi, <?= htmlspecialchars($userName);?>!</p>
 </div>
 
     <body>
        
 
-        <section style= "padding-top:200px;" class="container text-center bg-light">
+        <section style= "padding-top:200px; padding-bottom:50px;" class="container text-center bg-light">
             <h4 class="title">Create a Question</h4>
             <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
                 <label for="email">Question:</label></br>

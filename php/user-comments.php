@@ -124,22 +124,24 @@ unset($conn);
   <label for="nav-toggle" class="nav-toggle-label">
     <span></span>
   </label>
+  <p class="username">Hi, <?= htmlspecialchars($userName);?>!</p>
 </div>
 
     <body>
        
-        <section style= "padding-top:100px;" class="d-flex justify-content-around">
+    <section style= "padding-top:100px;" class="questionsBox">
 
-            <div class="d-flex align-items-center">
-                <p style="margin:32px; font-size:32px;"><?= htmlspecialchars($userName);?></p>
-                <div>
-                    <?= 'Questions: ' . htmlspecialchars($questionCount) . '</br>' ?>
-                    <?= 'Answers: ' . htmlspecialchars($answerCount) . '</br>' ?>
-                    <?= 'Comments: ' . htmlspecialchars($commentCount) . '</br>' ?>
-                </div>
-            </div>
+<div class="userInfo"  >
+    <p style="margin:32px; font-size:32px; border: 3px solid white;"><?= htmlspecialchars($userName);?></p>
+    <div style="width:120px; ">
+        </br>
+        <?= 'Questions: ' . htmlspecialchars($questionCount) . '</br>' ?>
+        <?= 'Answers: ' . htmlspecialchars($answerCount) . '</br>' ?>
+        <?= 'Comments: ' . htmlspecialchars($commentCount) . '</br>' ?>
+    </div>
+</div>
 
-            <div>
+            <div class="boxWithQ">
 
                 <div class="d-flex justify-content-center" style="margin:8px;">
                     <form action="./user-questions.php" method="get" style="margin:4px;">
@@ -165,7 +167,7 @@ unset($conn);
                                 <tr>
                                     <td>
                                         <form action="./question.php" method="get">
-                                            <button type="submit" name="questionID" value=<?= htmlspecialchars($comment['questionID']);?> class="btn btn-danger text-white btn-sm"><?=  htmlspecialchars($questionManager->getQuestion($comment['questionID'])) ?></button>
+                                            <button type="submit" name="questionID" value=<?= htmlspecialchars($comment['questionID']);?> class="buttonQuestion question1"><?=  htmlspecialchars($questionManager->getQuestion($comment['questionID'])) ?></button>
                                         </form>
                                         <div class="d-flex p-2">
                                             <span style="margin-left:16px;"><?=  htmlspecialchars($comment['comment']);?></span>    
