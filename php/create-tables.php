@@ -14,6 +14,29 @@ try{
 }
 
 require_once('./dbtable.php');
+require_once ('./managers/account-manager.php');
+$accountManager = new AccountManager($conn);
+
+if(!$accountManager->isTaken("username","admin")){
+    $accountManager->createAccount("admin","admin@admin.com","admin123");
+    echo "Creating admin!" . '<br>';
+}
+else{
+    echo "Admin already exists!" . '<br>';
+}
+$user = $accountManager->getAccount("username","admin","admin123");
+if(!$accountManager->isAdmin($user['id'])){
+    $sql = <<<EOSQL
+        INSERT INTO Admins (userID) VALUES(:userID);
+    EOSQL;
+    $stmt= $conn->prepare($sql);
+    $stmt->execute([':userID'=>$user['id']]);
+    echo "Granting admin rights!" . '<br>';
+}
+else{
+    echo "Admin already set up!" . '<br>';
+}
+
 
 $dbtable = new DBTable($conn);
 
