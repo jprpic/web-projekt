@@ -246,7 +246,7 @@ unset($conn);
                                  
                                  <div style="margin-left: 32px; padding-bottom: 10px; padding-left: 10px; border-bottom: 2px solid rgb(230, 230, 230); border-left: 2px solid rgb(230, 230, 230);">
                                  <form action="./user-questions.php" method="get">
-                                    <button style="margin-top: 12px;" type="submit" class="btn btn-info text-white btn-sm" name="userID" value=<?= htmlspecialchars($questionComment['userID']); ?>><?= htmlspecialchars($accountManager->getUsername($childComment['userID'])); ?></button>
+                                    <button style="margin-top: 12px;" type="submit" class="btn btn-info text-white btn-sm" name="userID" value=<?= htmlspecialchars($childComment['userID']); ?>><?= htmlspecialchars($accountManager->getUsername($childComment['userID'])); ?></button>
                                  </form>   
                                         <?= htmlspecialchars($childComment['comment']);?>
                                         <div style="margin-top:10px;"></div>

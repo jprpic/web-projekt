@@ -124,7 +124,7 @@ unset($conn);
         <label for="nav-toggle" class="nav-toggle-label">
             <span></span>
         </label>
-        <p class="username">Hi, <?= htmlspecialchars($userName);?>!</p>
+        <p class="username">Hi, <?= htmlspecialchars($accountManager->getUsername($_SESSION['userID']));?>!</p>
     </div>
 
     <body>

@@ -2,10 +2,10 @@
 
 final class DBConfig
 {
-    const HOST = 'localhost';
-    const DB_NAME = 'askme';
-    const USERNAME = 'user';
-    const PASS = 'user';
+    const HOST = 'eu-cdbr-west-01.cleardb.com';
+    const DB_NAME = 'heroku_dcd1db2779b550f';
+    const USERNAME = 'be4d7787062ad3';
+    const PASS = 'd6e08553';
 
     public static function getConnection(){
         try {
