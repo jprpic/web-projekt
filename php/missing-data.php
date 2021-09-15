@@ -12,31 +12,58 @@ if(isset($_POST['logout'])){
     header('Location:./login.php');
 }
 
+require_once('./dbconfig.php');
+require_once('./managers/account-manager.php');
+$conn = DBConfig::getConnection();
+$userID = $_SESSION['userID'];
+$accountManager = new AccountManager($conn);
+$userName = $accountManager->getUsername($userID);
 ?>
 
 <!DOCTYPE html>
 <html>
 
     <head>
-        <title>Create a Question</title>
+        <title>Missing data</title>
+        <link rel="stylesheet" href="styles.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
 
     <body>
-        <section class="d-flex justify-content-between bg-light text-right">
-            <a href="./index.php"><button class="btn btn-primary text-white" style="margin:4px;">Home</button></a>
-            <div class="d-flex justify-content-end" style="margin:4px;">
-                <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
-                <form action="./user-questions.php" method="get" style="margin:0px 4px;">
-                    <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="btn btn-primary text-white">Your profile</button>
-                </form>
-                <form action="" method="POST">
-                    <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
-                </form>
-            </div>
-        </section>
+    <div class="header">
+        <h1 class="logo">AskMe?</h1>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <nav class="nav">
+            <ul>
+                <li>
+                    <form action="./index.php" method="post" >
+                        <button type="submit" class="button_slide slide_left active1"><span class="text">Home</span></button>
+                    </form>
+                </li>
+                <li>
+                    <form action="./create-question.php" method="post" >
+                        <button type="submit" class="button_slide slide_left"><span class="text">Create a Question</span></button>
+                    </form>
+                </li>
+                <li>
+                    <form action="./user-questions.php" method="get" >
+                        <button type="submit" name="userID" value="<?= htmlspecialchars($_SESSION['userID']);?>" class="button_slide slide_left"><span class="text">your profile</span></button>
+                    </form>
+                </li>
+                <li><form action="" method="POST">
+                        <button type="submit" name="logout" value="Log Out" class="button_slide slide_left logout"><span class="text">Log out</span></button>
 
-        <section class="container text-center bg-light">
+                    </form></li>
+            </ul>
+        </nav>
+        <label for="nav-toggle" class="nav-toggle-label">
+            <span></span>
+        </label>
+        <p class="username">Hi, <?= htmlspecialchars($userName);?>!</p>
+    </div>
+
+        <section class="text-center bg-light">
+            <br><br><br><br>
             <h4 class="title">Sorry, there's nothing here.</h4>
         </section>
 

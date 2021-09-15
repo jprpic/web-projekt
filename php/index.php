@@ -71,18 +71,18 @@ unset($conn);
   <nav class="nav">
     <ul>
       <li>  
-            <form action="./index.php" method="get" >
-                <button type="submit" name="userID"  class="button_slide slide_left active1"><span class="text">Home</span></button>
+            <form action="./index.php" method="post" >
+                <button type="submit" class="button_slide slide_left active1"><span class="text">Home</span></button>
             </form>
         </li>
       <li>  
-            <form action="./create-question.php" method="get" >
-                <button type="submit" name="userID"  class="button_slide slide_left"><span class="text">Create a Question</span></button>
+            <form action="./create-question.php" method="post" >
+                <button type="submit" class="button_slide slide_left"><span class="text">Create a Question</span></button>
             </form>
         </li>
       <li>  
             <form action="./user-questions.php" method="get" >
-                <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="button_slide slide_left"><span class="text">your profile</span></button>
+                <button type="submit" name="userID" value="<?= htmlspecialchars($_SESSION['userID']);?>" class="button_slide slide_left"><span class="text">your profile</span></button>
             </form>
         </li>
       <li><form action="" method="POST">

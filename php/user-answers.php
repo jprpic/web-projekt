@@ -26,7 +26,7 @@ $answerManager = new AnswerManager($conn);
 $ownerID = $_SESSION['userID'];
 
 if(isset($_POST['remove'])){
-    $answerManager->removeAnswer($_POST['remove'],$ownerID);
+    $answerManager->removeAnswer($_POST['remove'],$_GET['userID']);
 }
 
 require_once('./managers/question-manager.php');
@@ -57,36 +57,36 @@ unset($conn);
 
 
     <div class="header">
-  <h1 class="logo">AskMe?</h1>
-  <input type="checkbox" id="nav-toggle" class="nav-toggle">
-  <nav class="nav">
-    <ul>
-      <li>  
-            <form action="./index.php" method="get" >
-                <button type="submit" name="userID"  class="button_slide slide_left"><span class="text">Home</span></button>
-            </form>
-        </li>
-      <li>  
-            <form action="./create-question.php" method="get" >
-                <button type="submit" name="userID"  class="button_slide slide_left"><span class="text">Create a Question</span></button>
-            </form>
-        </li>
-      <li>  
-            <form action="./user-questions.php" method="get" >
-                <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="button_slide slide_left active1"><span class="text">your profile</span></button>
-            </form>
-        </li>
-      <li><form action="" method="POST">
-         <button type="submit" name="logout" value="Log Out" class="button_slide slide_left logout"><span class="text">Log out</span></button>
-              
-            </form></li>
-    </ul>
-  </nav>
-  <label for="nav-toggle" class="nav-toggle-label">
-    <span></span>
-  </label>
-  <p class="username">Hi, <?= htmlspecialchars($userName);?>!</p>
-</div>
+        <h1 class="logo">AskMe?</h1>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <nav class="nav">
+            <ul>
+                <li>
+                    <form action="./index.php" method="post" >
+                        <button type="submit" class="button_slide slide_left active1"><span class="text">Home</span></button>
+                    </form>
+                </li>
+                <li>
+                    <form action="./create-question.php" method="post" >
+                        <button type="submit" class="button_slide slide_left"><span class="text">Create a Question</span></button>
+                    </form>
+                </li>
+                <li>
+                    <form action="./user-questions.php" method="get" >
+                        <button type="submit" name="userID" value="<?= htmlspecialchars($_SESSION['userID']);?>" class="button_slide slide_left"><span class="text">your profile</span></button>
+                    </form>
+                </li>
+                <li><form action="" method="POST">
+                        <button type="submit" name="logout" value="Log Out" class="button_slide slide_left logout"><span class="text">Log out</span></button>
+
+                    </form></li>
+            </ul>
+        </nav>
+        <label for="nav-toggle" class="nav-toggle-label">
+            <span></span>
+        </label>
+        <p class="username">Hi, <?= htmlspecialchars($userName);?>!</p>
+    </div>
 
     <body>
         
