@@ -92,45 +92,66 @@ unset($conn);
 
     <head>
         <title>Your Questions</title>
+        <link rel="stylesheet" href="styles.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
+    <div class="header">
+  <h1 class="logo">AskMe?</h1>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle">
+  <nav class="nav">
+    <ul>
+      <li>  
+            <form action="./index.php" method="get" >
+                <button type="submit" name="userID"  class="button_slide slide_left"><span class="text">Home</span></button>
+            </form>
+        </li>
+      <li>  
+            <form action="./create-question.php" method="get" >
+                <button type="submit" name="userID"  class="button_slide slide_left"><span class="text">Create a Question</span></button>
+            </form>
+        </li>
+      <li>  
+            <form action="./user-questions.php" method="get" >
+                <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="button_slide slide_left active1"><span class="text">your profile</span></button>
+            </form>
+        </li>
+      <li><form action="" method="POST">
+         <button type="submit" name="logout" value="Log Out" class="button_slide slide_left logout"><span class="text">Log out</span></button>
+              
+            </form></li>
+    </ul>
+  </nav>
+  <label for="nav-toggle" class="nav-toggle-label">
+    <span></span>
+  </label>
+  <p class="username">Hi, <?= htmlspecialchars($userName);?>!</p>
+</div>
 
     <body>
-        <section class="d-flex justify-content-between bg-light text-right">
-            <a href="./index.php"><button class="btn btn-primary text-white" style="margin:4px;">Home</button></a>
-            <div class="d-flex justify-content-end" style="margin:4px;">
-                <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
-                <form action="./user-questions.php" method="get" style="margin:0px 4px;">
-                    <button type="submit" name="userID" value=<?= htmlspecialchars($_SESSION['userID']);?> class="btn btn-primary text-white">Your profile</button>
-                </form>
-                <form action="" method="POST">
-                    <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
-                </form>
-            </div>
-        </section>
+       
+    <section style= "padding-top:100px;" class="questionsBox">
 
-        <section class="d-flex justify-content-around">
+<div class="userInfo"  >
+    <p style="margin:32px; font-size:32px; border: 3px solid white;"><?= htmlspecialchars($userName);?></p>
+    <div style="width:120px; ">
+        </br>
+        <?= 'Questions: ' . htmlspecialchars($questionCount) . '</br>' ?>
+        <?= 'Answers: ' . htmlspecialchars($answerCount) . '</br>' ?>
+        <?= 'Comments: ' . htmlspecialchars($commentCount) . '</br>' ?>
+    </div>
+</div>
 
-            <div class="d-flex align-items-center">
-                <p style="margin:32px; font-size:32px;"><?= htmlspecialchars($userName);?></p>
-                <div>
-                    <?= 'Questions: ' . htmlspecialchars($questionCount) . '</br>' ?>
-                    <?= 'Answers: ' . htmlspecialchars($answerCount) . '</br>' ?>
-                    <?= 'Comments: ' . htmlspecialchars($commentCount) . '</br>' ?>
-                </div>
-            </div>
-
-            <div>
+            <div class="boxWithQ">
 
                 <div class="d-flex justify-content-center" style="margin:8px;">
                     <form action="./user-questions.php" method="get" style="margin:4px;">
-                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="btn btn-primary text-white">Questions</button>
+                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="button_slide slide_left">Questions</button>
                     </form>
                     <form action="./user-answers.php" method="get" style="margin:4px;">
-                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="btn btn-primary text-white">Answers</button>
+                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="button_slide slide_left">Answers</button>
                     </form>
                     <form action="./user-comments.php" method="get" style="margin:4px;">
-                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="btn btn-primary text-white">Comments</button>
+                        <button type="submit" name="userID" value=<?= htmlspecialchars($userID);?> class="button_slide slide_left active1">Comments</button>
                     </form>
                 </div>
 
@@ -140,20 +161,20 @@ unset($conn);
                         <thead>
 
                         </thead>
-                        <tbody class="text-left">
+                        <tbody class="text-center">
                             <?php foreach($comments as &$comment):?>
                                 <?php $isReply = $comment['type']==$commentManager::TYPE_REPLY;?>
                                 <tr>
                                     <td>
                                         <form action="./question.php" method="get">
-                                            <button type="submit" name="questionID" value=<?= htmlspecialchars($comment['questionID']);?> class="btn btn-danger text-white btn-sm"><?=  htmlspecialchars($questionManager->getQuestion($comment['questionID'])) ?></button>
+                                            <button type="submit" name="questionID" value=<?= htmlspecialchars($comment['questionID']);?> class="buttonQuestion question1"><?=  htmlspecialchars($questionManager->getQuestion($comment['questionID'])) ?></button>
                                         </form>
-                                        <div class="d-flex p-2">
-                                            <span style="margin-left:16px;"><?=  htmlspecialchars($comment['comment']);?></span>    
+                                        <div class="p-2">
+                                            <?=  htmlspecialchars($comment['comment']);?>
                                         </div>
                                     </td>
                                     <?php if($isOwner):?>
-                                        <td >
+                                        <td class="align-middle">
                                         <form action="" method="post"  >
                                             <button type="submit" name=<?php if($isReply){echo "removeReply";}else{echo "removeComment";}?> value=<?= htmlspecialchars($comment['id']) ?>
                                             class="btn btn-outline-danger btn-sm">x</button>
@@ -170,4 +191,8 @@ unset($conn);
         </section>
         
     </body>
+    <footer>
+    <p>Copyright © 2021</p>
+    <p>D.Rojnić, J.Prpić, D.Dražetić</p>
+</footer>
 </html>
