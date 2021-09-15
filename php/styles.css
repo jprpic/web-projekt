@@ -341,15 +341,7 @@ footer > p {
 }
 
 
-@media screen and (min-width: 1365px) {
 
-  .boxWithQ{
-    margin-left: auto ;
-    margin-right: auto;
-    width: 1000px;
-    
-  }
-}
 
 
 
@@ -369,7 +361,7 @@ footer > p {
   margin-left: auto ;
   margin-right: auto;
   max-width: 1000px;
-  min-width: 600px;
+  flex-grow: 100;
 }
 
 .userInfo{
