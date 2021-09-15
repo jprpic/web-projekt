@@ -6,7 +6,20 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
 
+.text-danger1{
+  border: 2px solid #B5B5B5;
+  border-radius: 10px;
+  
+}
 
 .buttonQuestion
 {
@@ -303,6 +316,43 @@ nav a:hover {
 }
 
 
+footer{
+  width: 100%;
+  height: 80px;
+  margin-top: auto;
+  
+  background-color:#E6E6E6; 
+  align-items: center;
+  padding-top: 30px;
+}
+
+footer > p {
+  color:black;
+ text-align: center;
+ margin-top: -15px;
+ 
+ font-family: 'Work Sans', sans-serif;
+}
+
+.footer1{
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+}
+
+
+@media screen and (min-width: 1365px) {
+
+  .boxWithQ{
+    margin-left: auto ;
+    margin-right: auto;
+    width: 1000px;
+    
+  }
+}
+
+
+
 @media screen and (min-width: 965px) {
 
   .username{
@@ -318,7 +368,8 @@ nav a:hover {
 .boxWithQ{
   margin-left: auto ;
   margin-right: auto;
-  width: 1000px;
+  max-width: 1000px;
+  min-width: 600px;
 }
 
 .userInfo{

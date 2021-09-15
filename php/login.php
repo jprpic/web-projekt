@@ -63,18 +63,18 @@ if(isset($_POST['submit'])){
 <div class="headerlogin">
     <h1>AskMe?</h1>
 </div>
-<section class="container text-center bg-light">
+<section class="container text-center bg-light" style="margin-bottom: 250px; width: fit-content; border: 2px solid #B5B5B5; padding: 50px 150px 30px 150px; border-radius:20px;" >
         <h4 class="title">Log-in</h4>
         <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
             <label for="email">E-mail/Username:</label></br>
-            <input type="text" id="email" name="email" value="<?php echo htmlspecialchars($email)?>"></br>
+            <input type="text" class="text-danger1" id="email" name="email" value="<?php echo htmlspecialchars($email)?>"></br>
             <div class="text-danger"><?php echo $errors['name'];?></div>
 
             <label for="password">Password:</label></br>
-            <input type="password" id="password" name="password"></br>
+            <input type="password" class="text-danger1" id="password" name="password"></br>
             <div class="text-danger"><?php echo $errors['password'];?></div>
 
-            <div class="center" style="margin:10px;">
+            <div class="center" style="margin:10px; margin-top:40px;">
                 <input type="submit" name="submit" value="Submit" class="button_slide slide_left">
             </div>
             <div>
@@ -82,6 +82,12 @@ if(isset($_POST['submit'])){
             </div>
         </form>
     </section>
+
 </body>
+
+<footer>
+    <p>Copyright © 2021</p>
+    <p>D.Rojnić, J.Prpić, D.Dražetić</p>
+</footer>
 
 </html>

@@ -89,7 +89,7 @@ if(isset($_POST['submit'])){
             <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
                 <label for="email">Question:</label></br>
                 <div id="questionbox" style="max-width: 700px; margin: 0px auto; ">
-                    <textarea id="question" name="question" rows="3" cols="100" style="padding:4px 0px 0px 8px; width:100%;"></textarea>
+                    <textarea id="question" class="text-danger1" name="question" rows="3" cols="100" style="padding:4px 0px 0px 8px; width:100%;"></textarea>
                 </div>
                 <div class="text-danger"> <?= htmlspecialchars($error) ?> </div>
 
@@ -98,4 +98,11 @@ if(isset($_POST['submit'])){
         </section>
 
     </body>
+   
+    <footer>
+    <p>Copyright © 2021</p>
+    <p>D.Rojnić, J.Prpić, D.Dražetić</p>
+</footer>
+
+
 </html>

@@ -103,7 +103,7 @@ unset($conn);
     </div>
 </div>
 
-            <div class="boxWithQ" >
+            <div class="boxWithQ" id="boxWithQ" >
 
                 <div class="d-flex justify-content-center" style="margin:8px;">
                     <form action="./user-questions.php" method="get" style="margin:4px;">
@@ -158,4 +158,9 @@ unset($conn);
         
         
     </body>
+
+    <footer>
+    <p>Copyright © 2021</p>
+    <p>D.Rojnić, J.Prpić, D.Dražetić</p>
+</footer>
 </html>

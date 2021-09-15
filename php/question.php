@@ -160,7 +160,7 @@ unset($conn);
 <body>
 
     <div class="text-center" style="padding: 100px 100px 40px 100px; font-size: 1.3em;">
-        <?= htmlspecialchars($question); ?>
+        <div class="text-danger1"> <?= htmlspecialchars($question); ?></div>
         <?php if($userAnswer):?>
             <p style="background-color:#E6E6E6;">You voted <span class=<?php if($userAnswer=="no"){echo "text-danger";}else{echo "text-success";}?>><?= htmlspecialchars($userAnswer); ?></span></p>
         <?php endif;?>
@@ -220,7 +220,7 @@ unset($conn);
         </br>
             <div class="commentbox" style="max-width: 600px; margin: 0px auto; ">
 
-                <textarea id="commentText" name="commentText" rows="2"    style="width:100%;   "></textarea>
+                <textarea id="commentText" class="text-danger1" name="commentText" rows="2"    style="width:100%;   "></textarea>
             </div>
            <div style="text-align: center;" > <input type="submit" id="commentSubmit" name="commentSubmit" value ="Submit" class="button_slide slide_left" style="margin-top:20px; "> </div></br>
         </form>
@@ -250,7 +250,7 @@ unset($conn);
                                 <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($questionComment['userID']);?>>
                                     <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
                                     <div class="commentbox" style="max-width: 600px; margin: 5px; ">
-                                            <textarea style=" width:100%; " rows="1"  name="replyToUser"  placeholder="Write your reply here." ></textarea>
+                                            <textarea style=" width:100%; " class="text-danger1" rows="1"  name="replyToUser"  placeholder="Write your reply here." ></textarea>
                                         </div>
                                 </form>
 
@@ -274,7 +274,7 @@ unset($conn);
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
                                         <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($childComment['userID']);?>>
                                         <div class="commentbox" style="max-width: 600px; margin: 5px; ">
-                                            <textarea style=" width:100%; " rows="1"  name="replyToUser"  placeholder="Write your reply here." ></textarea>
+                                            <textarea style=" width:100%; " class="text-danger1" rows="1"  name="replyToUser"  placeholder="Write your reply here." ></textarea>
                                         </div>
                                         
                                         </form>
@@ -290,6 +290,11 @@ unset($conn);
 
 
 </body>
+
+<footer>
+    <p>Copyright © 2021</p>
+    <p>D.Rojnić, J.Prpić, D.Dražetić</p>
+</footer>
 
 </html>
 

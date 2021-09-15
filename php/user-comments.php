@@ -191,4 +191,8 @@ unset($conn);
         </section>
         
     </body>
+    <footer>
+    <p>Copyright © 2021</p>
+    <p>D.Rojnić, J.Prpić, D.Dražetić</p>
+</footer>
 </html>

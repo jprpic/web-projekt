@@ -156,6 +156,17 @@ unset($conn);
         </tbody>
     </table>
     </section>
+    <!--
+<div class="footer">
+<p>Copyright © 2021</p>
+    <p>D.Rojnić, J.Prpić, D.Dražetić</p>
+</div>
+            -->
     
 </body>
+<footer>
+    <p>Copyright © 2021</p>
+    <p>D.Rojnić, J.Prpić, D.Dražetić</p>
+</footer>
+
 </html>
