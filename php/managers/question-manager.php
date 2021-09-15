@@ -114,18 +114,6 @@ class QuestionManager{
     }
 
 
-    /*public function getAvailableQuestions($userID){
-        $sql = <<<EOSQL
-            SELECT * FROM Questions WHERE id NOT IN (SELECT questionID FROM Answers where userID = :userID) AND id NOT IN (SELECT id FROM Questions where userID = :userID)
-            ORDER BY creationTime DESC;
-        EOSQL;
-
-        $questions = $this->conn->prepare($sql);
-        $questions->execute([':userID'=>$userID,':userID'=>$userID]);
-        $questions->setFetchMode(PDO::FETCH_ASSOC);
-        return $questions;
-    }*/
-
     public function getQuestion($questionID){
         $sql = <<<EOSQL
             SELECT question from Questions where id = :questionID
