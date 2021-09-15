@@ -35,7 +35,7 @@ if(isset($_POST['removeQuestion'])){
     header('Location:./index.php');
 }
 
-if(isset($_POST['commentSubmit'])){
+if(isset($_POST['commentSubmit']) && $_POST['commentText']){
     $comment = $_POST['commentText'];
     $commentManager->answerQuestion($questionID,$userID,$comment);
     header("Refresh:0");
@@ -51,24 +51,12 @@ if(isset($_POST['removeChildComment'])){
     header("Refresh:0");
 }
 
-if(isset($_POST['replyComment'])){
+if(isset($_POST['replyComment']) && $_POST['replyToUser']){
     $comment =  $_POST['replyToUser'];
     if(isset($_POST['replyToUserID'])){
         $comment = '@' . $accountManager->getUsername($_POST['replyToUserID']) . ' ' . $comment;
     }
     $commentManager->replyToComment($userID,$_POST['replyComment'],$comment);
-}
-
-
-if(isset($_POST['editQuestionComment'])){
-
-    $commentManager->editComment($_POST['editQuestionComment'],$commentManager::TYPE_COMMENT);
-    header("Refresh:0");
-}
-
-if(isset($_POST['editChildComment'])){
-    $commentManager->editComment($_POST['editChildComment'],$commentManager::TYPE_REPLY);
-    header("Refresh:0");
 }
 
 $questionComments = $commentManager->getQuestionComments($questionID);
@@ -244,8 +232,7 @@ unset($conn);
                                 <?php if($userID == $questionComment['userID'] || $isAdmin):?>
                                    
                                         <button type="submit" class="btn btn-outline-danger btn-sm" name="removeQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>delete</button>
-                                        <button type="submit" class="btn btn-outline-secondary btn-sm" name="editQuestionComment" value=<?= htmlspecialchars($questionComment['id']); ?>>edit</button>
-                                <?php endif;?>
+                                        <?php endif;?>
                                 
                                 <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($questionComment['userID']);?>>
                                     <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
@@ -267,10 +254,7 @@ unset($conn);
                                         <form action="" method="post">
                                         <?php if($userID == $childComment['userID'] || $isAdmin):?>
                                             <button  type="submit" class="btn btn-outline-danger btn-sm" name="removeChildComment" value=<?= htmlspecialchars($childComment['id']); ?>>delete</button>
-                                        <?php endif;?> 
-                                        <?php if($userID == $childComment['userID']):?>
-                                                <button type="submit" class="btn btn-outline-secondary btn-sm" name="editChildComment" value=<?= htmlspecialchars($childComment['id']); ?>>edit</button>
-                                        <?php endif;?> 
+                                        <?php endif;?>
                                         <button type="submit" class="btn btn-outline-secondary btn-sm" name="replyComment" value=<?= htmlspecialchars($questionComment['id']); ?>>reply</button>
                                         <input type="hidden" name="replyToUserID" value=<?= htmlspecialchars($childComment['userID']);?>>
                                         <div class="commentbox" style="max-width: 600px; margin: 5px; ">
