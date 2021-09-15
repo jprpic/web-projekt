@@ -102,26 +102,7 @@ unset($conn);
 
 <body >
 
-<!--
-    <section style="padding-top:100px;" class="d-flex justify-content-between bg-light text-right">
 
-
-        <a href="./index.php"><button class="btn btn-primary text-white" style="margin:4px;">Home</button></a>
-
-
-        <div class="d-flex justify-content-end" style="margin:4px;">
-            <a href="./create-question.php"><button class="btn btn-primary text-white">Create a Question</button></a>
-            
-            <form action="./user-questions.php" method="get" style="margin:0px 4px;">
-                <button type="submit" name="userID" value=< htmlspecialchars($_SESSION['userID']);?> class="btn btn-primary text-white">Your profile</button>
-            </form>
-
-            <form action="" method="POST">
-                <input type="submit" name="logout" value="Log Out" class="btn btn-danger text-white">
-            </form>
-        </div>
-    </section>
--->
     <section style= "padding-top:100px;">
     <table class="table table-striped text-center">
         <thead>
@@ -156,12 +137,7 @@ unset($conn);
         </tbody>
     </table>
     </section>
-    <!--
-<div class="footer">
-<p>Copyright © 2021</p>
-    <p>D.Rojnić, J.Prpić, D.Dražetić</p>
-</div>
-            -->
+
     
 </body>
 <footer>

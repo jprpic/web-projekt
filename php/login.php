@@ -63,7 +63,7 @@ if(isset($_POST['submit'])){
 <div class="headerlogin">
     <h1>AskMe?</h1>
 </div>
-<section class="container text-center bg-light" style="margin-bottom: 250px; width: fit-content; border: 2px solid #B5B5B5; padding: 50px 150px 30px 150px; border-radius:20px;" >
+<section class="container text-center bg-light" style=" margin-top:50px; margin-bottom: 140px; width: fit-content; border: 2px solid #B5B5B5; padding: 50px 150px 30px 150px; border-radius:20px;" >
         <h4 class="title">Log-in</h4>
         <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
             <label for="email">E-mail/Username:</label></br>

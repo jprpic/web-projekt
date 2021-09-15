@@ -170,8 +170,7 @@ body {
   display: inline;
 }
 
-/* changed this from the tutorial video to
-   allow it to gain focus, making it tabbable */
+
 .nav-toggle {
   position: absolute !important;
   top: -9999px !important;
@@ -223,7 +222,7 @@ nav {
   top: 100%;
   left: 0;
   background-image: linear-gradient(260deg, #f7f5f5 0%, #c7c5c5 100%);
-  /*background-image: linear-gradient(260deg, #2376ae 0%, #c16ecf 100%);*/
+  
   width: 100%;
   transform: scale(1, 0);
   transform-origin: top;
@@ -245,54 +244,11 @@ nav li {
 
 
 
-/*
-
-.button1{
-  background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;
-
-    color: white;
-    text-decoration: none;
-    font-size: 1.0rem;
-    text-transform: uppercase;
-   
-    transition: opacity 150ms ease-in-out;
-}
-
-.button1 span:hover  {
-  color: #000;
-  border: solid 2px white;
-}
-*/
-/*
-
-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 1.0rem;
-  text-transform: uppercase;
-  opacity: 0;
-  transition: opacity 150ms ease-in-out;
-}
-
-nav a:hover {
-  color: #000;
-}
-*/
-
 .nav-toggle:checked ~ nav {
   transform: scale(1,1);
 }
 
-/*
-.nav-toggle:checked ~ nav a {
-  opacity: 1;
-  transition: opacity 250ms ease-in-out 250ms;
-}*/
+
 .questionsBox{
   width: 100%;
   
@@ -347,6 +303,10 @@ footer > p {
 
 @media screen and (min-width: 965px) {
 
+  body{
+    zoom: 1.2;;
+  }
+
   .username{
     
     padding-top: 17px;
@@ -362,6 +322,7 @@ footer > p {
   margin-right: auto;
   max-width: 1000px;
   flex-grow: 100;
+  padding-right: 20px;
 }
 
 .userInfo{
@@ -385,9 +346,7 @@ footer > p {
   }
   
   nav {
-    /* this causes issues with Edge, since it's unsupported */
     
-    /* the following lines are not from my video, but add Edge support */
     position: relative;
     text-align: left;
     transition: none;
@@ -395,7 +354,7 @@ footer > p {
     background: none;
     top: initial;
     left: initial;
-    /* end Edge support stuff */
+    
     
     grid-column: 3 / 4;
     display: flex;

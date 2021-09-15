@@ -55,7 +55,7 @@ if(isset($_POST['create'])){
 <div class="headerlogin">
     <h1>AskMe?</h1>
 </div>
-<section class="container text-center bg-light" style="margin-bottom: 150px; width: fit-content; border: 2px solid #B5B5B5; padding: 50px 150px 20px 150px; border-radius:20px; ">
+<section class="container text-center bg-light" style="margin-top:50px; margin-bottom: 50px; width: fit-content; border: 2px solid #B5B5B5; padding: 50px 150px 20px 150px; border-radius:20px; ">
         <h4 class="title">Create an account</h4>
         <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
             <label for="email">Username:</label></br>
