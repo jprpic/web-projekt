@@ -68,32 +68,6 @@ class CommentManager{
         return $comments;
     }
 
-    public function editComment($commentID,$commentType){
-        $comment = "This is an edited comment!";
-
-        if($commentType==self::TYPE_COMMENT){
-            $tableName = "Question_comments";
-        }
-        else if($commentType==self::TYPE_REPLY){
-            $tableName = "Child_comments";
-        }
-
-        $sql = <<<EOSQL
-                UPDATE $tableName
-                SET comment = :comment
-                WHERE id = :commentID
-        EOSQL;
-
-        $edit = $this->conn->prepare($sql);
-        try{
-            $edit->execute([':comment'=>$comment,':commentID'=>$commentID]);
-        }
-        catch(PDOException $e){
-            echo $e->getMessage();
-        }
-        
-    }
-
     public function countComments($userID){
         $sql = <<<EOSQL
             SELECT COUNT(*) FROM Question_comments WHERE userID = :userID;

@@ -161,7 +161,7 @@ unset($conn);
                         <thead>
 
                         </thead>
-                        <tbody class="text-left">
+                        <tbody class="text-center">
                             <?php foreach($comments as &$comment):?>
                                 <?php $isReply = $comment['type']==$commentManager::TYPE_REPLY;?>
                                 <tr>
@@ -169,12 +169,12 @@ unset($conn);
                                         <form action="./question.php" method="get">
                                             <button type="submit" name="questionID" value=<?= htmlspecialchars($comment['questionID']);?> class="buttonQuestion question1"><?=  htmlspecialchars($questionManager->getQuestion($comment['questionID'])) ?></button>
                                         </form>
-                                        <div class="d-flex p-2">
-                                            <span style="margin-left:16px;"><?=  htmlspecialchars($comment['comment']);?></span>    
+                                        <div class="p-2">
+                                            <?=  htmlspecialchars($comment['comment']);?>
                                         </div>
                                     </td>
                                     <?php if($isOwner):?>
-                                        <td >
+                                        <td class="align-middle">
                                         <form action="" method="post"  >
                                             <button type="submit" name=<?php if($isReply){echo "removeReply";}else{echo "removeComment";}?> value=<?= htmlspecialchars($comment['id']) ?>
                                             class="btn btn-outline-danger btn-sm">x</button>
