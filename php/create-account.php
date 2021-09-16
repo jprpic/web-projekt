@@ -47,15 +47,16 @@ if(isset($_POST['create'])){
 <head>
 <title>Create an account</title>
 <link rel="stylesheet" href="styles.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
-
+<div>
 <div class="headerlogin">
     <h1>AskMe?</h1>
 </div>
-<section class="container text-center bg-light" style="margin-top:50px; margin-bottom: 50px; width: fit-content; border: 2px solid #B5B5B5; padding: 50px 150px 20px 150px; border-radius:20px; ">
+<section class="container text-center bg-light" style="margin-top:70px;  width: fit-content; border: 2px solid #B5B5B5; padding: 50px 100px 20px 100px; border-radius:20px; ">
         <h4 class="title">Create an account</h4>
         <form class="" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
             <label for="email">Username:</label></br>
@@ -82,6 +83,7 @@ if(isset($_POST['create'])){
             </div>
         </form>
     </section>
+</div>
 </body>
 <footer>
     <p>Copyright © 2021</p>

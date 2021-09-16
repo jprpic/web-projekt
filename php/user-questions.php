@@ -54,6 +54,7 @@ unset($conn);
 
     <head>
         <title>Your Questions</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
         <link rel="stylesheet" href="styles.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
@@ -65,7 +66,7 @@ unset($conn);
             <ul>
                 <li>
                     <form action="./index.php" method="post" >
-                        <button type="submit" class="button_slide slide_left active1"><span class="text">Home</span></button>
+                        <button type="submit" class="button_slide slide_left "><span class="text">Home</span></button>
                     </form>
                 </li>
                 <li>
@@ -75,7 +76,7 @@ unset($conn);
                 </li>
                 <li>
                     <form action="./user-questions.php" method="get" >
-                        <button type="submit" name="userID" value="<?= htmlspecialchars($_SESSION['userID']);?>" class="button_slide slide_left"><span class="text">your profile</span></button>
+                        <button type="submit" name="userID" value="<?= htmlspecialchars($_SESSION['userID']);?>" class="button_slide slide_left active1"><span class="text">your profile</span></button>
                     </form>
                 </li>
                 <li><form action="" method="POST">
